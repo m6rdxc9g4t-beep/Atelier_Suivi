@@ -23,17 +23,37 @@ Installable comme une app : Safari → *Partager → Sur l'écran d'accueil* (iP
 
 Le prototype d'origine (page autonome, sans serveur) est gardé dans `docs/prototype/atelier_suivi.html`.
 
-## 1. Installation locale
+## 1. Version locale sur ton Mac (la plus simple pour commencer)
+
+Tout tourne sur le Mac, rien n'est en ligne. Prérequis : **Node.js ≥ 20** et **Docker Desktop** (ou OrbStack), lancé.
+
+```bash
+git clone https://github.com/m6rdxc9g4t-beep/Atelier_Suivi.git atelier_suivi
+cd atelier_suivi
+npm run local
+```
+
+La commande démarre une base Supabase sur le Mac (la première fois : quelques minutes de téléchargement), applique
+le schéma, te demande un e-mail et un mot de passe pour ton compte local, ajoute 7 tâches d'exemple, puis ouvre
+l'app sur **http://127.0.0.1:3030**. Les fois suivantes, `npm run local` suffit (tes données sont gardées).
+
+- Arrêter : `Ctrl+C` pour l'app, puis `npm run local:stop` pour la base.
+- Tableau de bord de la base : http://127.0.0.1:54423 · e-mails de connexion (lien magique) : http://127.0.0.1:54424
+- Ports décalés (54421…) : la base de Suivi tourne à côté de celles des autres apps Atelier.
+- Lien Trésorerie en local : *Paramètres → Synchronisation → Créer une clé*, puis colle la commande affichée dans le
+  Terminal : le script parle à la base locale et à Trésorerie (http://127.0.0.1:5050), tout reste sur le Mac.
+
+## 2. Installation de développement (base en ligne)
 
 Prérequis : Node.js ≥ 20.9 et un compte [Supabase](https://supabase.com).
 
 ```bash
 npm install
 cp .env.example .env.local   # puis renseigne les valeurs (étape 2)
-npm run dev                   # http://localhost:3000
+npm run dev                   # http://127.0.0.1:3030
 ```
 
-## 2. Préparer Supabase
+## 3. Préparer Supabase (en ligne)
 
 1. **Créer un projet** (région Europe — Paris ou Francfort).
 2. **Appliquer le schéma** : *SQL Editor* → coller `supabase/migrations/20261021000000_init.sql` et l'exécuter
@@ -47,7 +67,7 @@ npm run dev                   # http://localhost:3000
    <p><a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email">Ouvrir mon suivi</a></p>
    ```
 
-## 3. Déployer sur Vercel
+## 4. Déployer sur Vercel
 
 1. Vercel → *Add New Project* → importer `Atelier_Suivi`.
 2. Variables : `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_SITE_URL` (URL de prod),
@@ -55,7 +75,7 @@ npm run dev                   # http://localhost:3000
 3. *Settings → Functions → Region* : celle de la base Supabase.
 4. Reporter l'URL de prod dans Supabase (*Site URL* + *Redirect URLs*).
 
-## 4. Lien avec atelier_Trésorerie
+## 5. Lien avec atelier_Trésorerie
 
 Trésorerie est une application **locale** (Flask, http://127.0.0.1:5050) : rien ne sort de ton Mac. Suivi, lui, est
 en ligne pour être utilisé depuis le téléphone. Le pont entre les deux est un petit script qui tourne sur le Mac :
@@ -87,19 +107,20 @@ SUIVI_SUPABASE_URL="…" SUIVI_SUPABASE_KEY="sb_publishable_…" SUIVI_SYNC_TOKE
 **Sans le script** : *Trésorerie → Exporter en CSV*, puis dans Trésorerie *Transactions → Importer* (colonnes
 Date ; Libellé ; Montant ; Catégorie reconnues automatiquement), puis *J'ai importé le CSV* dans Suivi.
 
-## 5. Commandes
+## 6. Commandes
 
 | Commande | Rôle |
 | --- | --- |
-| `npm run dev` | Serveur de développement |
+| `npm run local` / `npm run local:stop` | Version locale complète sur le Mac (base + app), arrêt de la base |
+| `npm run dev` | Serveur de développement (port 3030) |
 | `npm run build` | Build de production |
 | `npm run typecheck` / `npm run lint` | Types et ESLint |
 | `npm test` | Tests unitaires (Vitest) : récurrences, séries, export CSV, schémas Zod |
 | `npm run test:rls` | Applique les migrations dans un Postgres embarqué (PGlite) et vérifie l'isolation RLS, les coches et les clés |
-| `npm run test:sync` | Pont vers Trésorerie avec de faux serveurs : envoi, anti-doublon, Trésorerie arrêtée, ligne refusée |
+| `npm run test:sync` | Pont vers Trésorerie (faux serveurs : envoi, anti-doublon, Trésorerie arrêtée) et préparation locale (exemples validés dans PGlite) |
 | `npm run sync:tresorerie` | Un passage d'envoi vers Trésorerie |
 
-## 6. Arborescence
+## 7. Arborescence
 
 ```
 src/
@@ -123,15 +144,18 @@ src/
     └── supabase/                   # clients navigateur / serveur / proxy + types
 scripts/
 ├── sync-tresorerie.mjs             # pont Suivi → Trésorerie (Node ≥ 20, sans dépendance)
+├── local-setup.mjs                 # version locale : .env.local, compte, tâches d'exemple
+├── macos/start-local.sh            # npm run local
 ├── macos/install-sync.sh           # agent launchd (toutes les 15 min)
 └── tests/                          # tests du pont
 supabase/
-├── migrations/20261021000000_init.sql
+├── config.toml                     # base locale (ports 54421…)
+├── migrations/                     # schéma + profils des comptes existants
 └── tests/rls.mjs
 docs/prototype/atelier_suivi.html   # prototype d'origine
 ```
 
-## 7. Sécurité des données
+## 8. Sécurité des données
 
 - Chaque table porte un `user_id` ; **RLS** n'autorise que son propriétaire. Clés étrangères composites `(id, user_id)` :
   impossible de cocher la tâche de quelqu'un d'autre ou d'y rattacher une ligne.
@@ -141,7 +165,7 @@ docs/prototype/atelier_suivi.html   # prototype d'origine
 - Clés de synchronisation : générées par la base, montrées une seule fois, stockées sous forme d'empreinte SHA-256 ;
   les fonctions du script ne lisent et ne marquent que les lignes du propriétaire de la clé.
 
-## 8. Prochaines étapes suggérées
+## 9. Prochaines étapes suggérées
 
 - Ajouter `--atelier-sig-suivi: #15aabf` au kit de marque dans Atelier_Projets, puis recopier le kit partout.
 - Logo atelier_Suivi suivant le gabarit de la charte, et fenêtre « À propos ».

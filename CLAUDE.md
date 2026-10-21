@@ -43,7 +43,8 @@ Pas de couleurs ni d'ombres en dur. Sur téléphone, la barre d'onglets est fixe
 ancêtre d'un élément `fixed`. Zones tactiles ≥ 44 px. Textes en français, tutoiement.
 
 ## Commandes utiles
-- `npm run dev` — serveur de développement (http://localhost:3000)
+- `npm run local` — version locale complète sur le Mac (Supabase dans Docker, ports 54421…, app sur 3030)
+- `npm run dev` — serveur de développement (http://127.0.0.1:3030)
 - `npm test` — tests unitaires (récurrence, CSV, schémas)
 - `npm run test:rls` — migrations dans PGlite + règles de sécurité
 - `npm run test:sync` — pont vers Trésorerie (faux serveurs)
