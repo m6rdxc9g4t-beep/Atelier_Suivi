@@ -60,6 +60,12 @@ async function expectFail(label, fn) {
 const rowsOrThrow = (r) => { if (!r.length) throw new Error("0 ligne"); return r; };
 
 // --- Profils -----------------------------------------------------------------
+// Compte créé avant Suivi (base partagée) : la migration de rattrapage lui donne un profil
+await db.exec(`alter table auth.users disable trigger on_auth_user_created`);
+await db.query(`insert into auth.users (id, email) values ('00000000-0000-0000-0000-0000000000e0', 'ancien@test.fr')`);
+await db.exec(`alter table auth.users enable trigger on_auth_user_created`);
+await db.exec(migrations.find((m) => m.includes("Profils pour les comptes qui existaient avant Suivi")));
+await expectOk("profil rattrapé pour un compte créé avant Suivi", () => db.query(`select display_name from profiles where id = '00000000-0000-0000-0000-0000000000e0'`).then((r) => r.rows), (r) => r.length === 1 && r[0].display_name === "ancien");
 await expectOk("profil créé à l'inscription", () => as(U.A, `select display_name from profiles`), (r) => r.length === 1 && r[0].display_name === "A");
 await expectOk("C ne voit que son profil", () => as(U.C, `select id from profiles`), (r) => r.length === 1 && r[0].id === U.C);
 
