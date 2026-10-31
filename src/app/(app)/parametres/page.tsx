@@ -12,7 +12,7 @@ import { signOut } from "@/app/connexion/actions";
 import { getUserContext } from "@/lib/dal";
 import { getSupabaseEnv } from "@/lib/env";
 import { deleteSyncToken } from "./actions";
-import { ProfileForm, TokenCreator } from "./settings-forms";
+import { PasswordForm, ProfileForm, TokenCreator } from "./settings-forms";
 
 export const metadata: Metadata = { title: "Paramètres" };
 
@@ -43,7 +43,7 @@ export default function SettingsPage() {
 }
 
 async function SettingsContent() {
-  const { supabase, me } = await getUserContext();
+  const { supabase, me, email } = await getUserContext();
   const { data: tokens, error } = await supabase.from("sync_tokens").select("id, label, hint, created_at, last_used_at").order("created_at");
   if (error) throw new Error(error.message);
   const { url, key } = getSupabaseEnv();
@@ -89,6 +89,15 @@ async function SettingsContent() {
         )}
 
         <TokenCreator supabaseUrl={url} supabaseKey={key} />
+      </Panel>
+
+      <Panel>
+        <SectionTitle>Mot de passe</SectionTitle>
+        <p className="mb-4 max-w-prose text-sm text-ink-soft">
+          Connecté en tant que <span className="font-semibold text-ink">{email}</span>. Le compte est commun aux apps Atelier qui partagent la même base
+          (comme Atelier Cuisine) : un nouveau mot de passe vaut aussi pour elles.
+        </p>
+        <PasswordForm />
       </Panel>
 
       <Panel>

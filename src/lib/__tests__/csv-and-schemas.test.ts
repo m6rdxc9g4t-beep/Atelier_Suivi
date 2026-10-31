@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { centsToFrench, tresorerieCsv } from "@/lib/csv";
 import { formatSignedCents } from "@/lib/format";
-import { completeWithLineSchema, taskSchema } from "@/lib/validation/schemas";
+import { completeWithLineSchema, loginSchema, passwordChangeSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
 
 describe("export CSV pour Trésorerie", () => {
   const csv = tresorerieCsv([
@@ -58,5 +58,28 @@ describe("coche avec montant", () => {
       kind: "depense",
     });
     expect(r.success && r.data.amount).toBe(890);
+  });
+});
+
+describe("création de compte et mot de passe", () => {
+  const compte = { email: "toi@exemple.fr", password: "motdepasse", confirm: "motdepasse" };
+  it("exige une adresse valide, 8 caractères et deux saisies identiques", () => {
+    expect(signUpSchema.safeParse(compte).success).toBe(true);
+    expect(signUpSchema.safeParse({ ...compte, password: "court", confirm: "court" }).success).toBe(false);
+    expect(signUpSchema.safeParse({ ...compte, email: "pas-une-adresse" }).success).toBe(false);
+    const r = signUpSchema.safeParse({ ...compte, confirm: "autrechose" });
+    expect(!r.success && r.error.issues[0].path).toEqual(["confirm"]);
+  });
+  it("nettoie l'adresse tapée sur iPhone", () => {
+    const r = loginSchema.safeParse({ email: " Toi@Exemple.fr " });
+    expect(r.success && r.data.email).toBe("toi@exemple.fr");
+  });
+  it("n'accepte que des chemins internes pour la suite", () => {
+    const r = signUpSchema.safeParse({ ...compte, next: "//evil.example" });
+    expect(r.success && r.data.next).toBeUndefined();
+  });
+  it("changement de mot de passe : deux saisies identiques", () => {
+    expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau12" }).success).toBe(true);
+    expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau13" }).success).toBe(false);
   });
 });

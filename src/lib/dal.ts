@@ -7,6 +7,8 @@ import type { ProfileRow } from "@/lib/supabase/database.types";
 export type UserContext = {
   supabase: Awaited<ReturnType<typeof createClient>>;
   userId: string;
+  /** Adresse du compte (jeton de session) */
+  email: string;
   me: ProfileRow;
 };
 
@@ -25,5 +27,5 @@ export const getUserContext = cache(async (): Promise<UserContext> => {
   if (error) throw new Error(`Lecture du profil impossible : ${error.message}`);
   if (!me) redirect("/connexion");
 
-  return { supabase, userId, me };
+  return { supabase, userId, email: auth?.claims?.email ?? "", me };
 });

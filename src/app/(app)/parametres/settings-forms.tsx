@@ -8,7 +8,7 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { buttonClasses } from "@/components/ui/button";
 import { idleState } from "@/lib/actions";
 import { useFormAction } from "@/lib/use-form-action";
-import { createSyncToken, updateProfile, type TokenState } from "./actions";
+import { createSyncToken, updatePassword, updateProfile, type TokenState } from "./actions";
 
 export function ProfileForm({ displayName }: { displayName: string }) {
   const [state, action] = useFormAction(updateProfile);
@@ -19,6 +19,28 @@ export function ProfileForm({ displayName }: { displayName: string }) {
       </Field>
       <SubmitButton pendingLabel="Enregistrement…">Enregistrer</SubmitButton>
       <FormMessage state={state} className="sm:basis-full" />
+    </form>
+  );
+}
+
+/** Changement de mot de passe (même formulaire qu'Atelier Dates) */
+export function PasswordForm() {
+  const [state, action] = useFormAction(updatePassword);
+  const e = state.fieldErrors;
+  return (
+    <form action={action} key={state.status === "success" ? state.message : "form"} className="grid gap-4 sm:grid-cols-2" noValidate>
+      <Field label="Nouveau mot de passe" name="password" hint="8 caractères minimum" errors={e?.password}>
+        <Input name="password" type="password" autoComplete="new-password" required invalid={!!e?.password} />
+      </Field>
+      <Field label="Confirme-le" name="confirm" errors={e?.confirm}>
+        <Input name="confirm" type="password" autoComplete="new-password" required invalid={!!e?.confirm} />
+      </Field>
+      <div className="flex flex-col gap-3 sm:col-span-2">
+        <FormMessage state={state} />
+        <SubmitButton variant="soft" pendingLabel="Enregistrement…" className="self-start">
+          Changer mon mot de passe
+        </SubmitButton>
+      </div>
     </form>
   );
 }

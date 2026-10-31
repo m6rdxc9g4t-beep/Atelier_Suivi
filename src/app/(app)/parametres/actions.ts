@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 import { getUserContext } from "@/lib/dal";
 import { failure, formToObject, fromDbError, fromZodError, success, type ActionState } from "@/lib/actions";
-import { profileSchema, tokenSchema, uuid } from "@/lib/validation/schemas";
+import { passwordChangeSchema, profileSchema, tokenSchema, uuid } from "@/lib/validation/schemas";
 
 export async function updateProfile(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = profileSchema.safeParse(formToObject(formData));
@@ -14,6 +14,23 @@ export async function updateProfile(_prev: ActionState, formData: FormData): Pro
   if (error) return fromDbError(error);
   refresh();
   return success("Profil enregistré.");
+}
+
+/** Nouveau mot de passe pour le compte connecté (comme Atelier Dates) */
+export async function updatePassword(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = passwordChangeSchema.safeParse(formToObject(formData));
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  const { supabase } = await getUserContext();
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  if (error) {
+    console.error("[auth] updateUser", error.code ?? error.status, error.message);
+    if (error.code === "same_password") return failure("C'est déjà ton mot de passe actuel.");
+    if (error.code === "weak_password") return failure("Mot de passe trop faible : mélange lettres, chiffres et symboles.");
+    if (error.code === "reauthentication_needed") return failure("Pour des raisons de sécurité, reconnecte-toi puis réessaie.");
+    return failure("Le mot de passe n'a pas pu être changé. Réessaie dans un instant.");
+  }
+  return success("Mot de passe changé.");
 }
 
 export type TokenState = ActionState & { token?: string };

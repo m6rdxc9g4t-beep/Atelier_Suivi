@@ -108,15 +108,32 @@ const next = z.preprocess(
 );
 
 export const loginSchema = z.object({
-  email: z.email({ error: "Adresse e-mail invalide." }),
+  // espaces retirés avant validation (le clavier iPhone en ajoute souvent un)
+  email: z.string({ error: "Indique ton adresse e-mail." }).trim().toLowerCase().pipe(z.email({ error: "Adresse e-mail invalide." })),
   next,
 });
 
-export const passwordLoginSchema = z.object({
-  email: z.email({ error: "Adresse e-mail invalide." }),
-  password: z.string({ error: "Indique ton mot de passe." }).min(1, "Indique ton mot de passe."),
-  next,
+export const passwordLoginSchema = loginSchema.extend({
+  password: z.string({ error: "Indique ton mot de passe." }).min(1, "Indique ton mot de passe.").max(200),
 });
+
+const newPassword = z.string({ error: "Choisis un mot de passe." }).min(8, "8 caractères minimum.").max(200, "200 caractères maximum.");
+
+/** Changement de mot de passe depuis les Paramètres (comme Atelier Dates) */
+export const passwordChangeSchema = z
+  .object({
+    password: newPassword,
+    confirm: z.string(),
+  })
+  .refine((v) => v.password === v.confirm, { path: ["confirm"], error: "Les deux mots de passe ne correspondent pas." });
+
+/** Création de compte : e-mail + mot de passe choisi (et confirmé), comme Atelier Dates */
+export const signUpSchema = loginSchema
+  .extend({
+    password: newPassword,
+    confirm: z.string({ error: "Confirme ton mot de passe." }),
+  })
+  .refine((v) => v.password === v.confirm, { path: ["confirm"], error: "Les deux mots de passe ne correspondent pas." });
 
 export const daySchema = requiredDate;
 export { uuid };
