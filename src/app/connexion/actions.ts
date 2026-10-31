@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { ACCOUNT_REFUSED, isAllowedEmail } from "@/lib/account";
 import { createClient } from "@/lib/supabase/server";
 import { failure, formToObject, fromZodError, success, type ActionState } from "@/lib/actions";
 import { codeLoginSchema, loginSchema, passwordLoginSchema, signUpSchema } from "@/lib/validation/schemas";
@@ -20,6 +21,7 @@ export async function sendMagicLink(_prev: ActionState, formData: FormData): Pro
   if (!parsed.success) return fromZodError(parsed.error);
 
   const { email, next } = parsed.data;
+  if (!isAllowedEmail(email)) return failure(ACCOUNT_REFUSED);
   const callback = new URL("/auth/callback", await siteUrl());
   if (next) callback.searchParams.set("next", next);
 
@@ -48,6 +50,7 @@ export async function verifyEmailCode(_prev: ActionState, formData: FormData): P
   if (!parsed.success) return fromZodError(parsed.error);
 
   const { email, code, next } = parsed.data;
+  if (!isAllowedEmail(email)) return failure(ACCOUNT_REFUSED);
   const supabase = await createClient();
   const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
 
@@ -67,6 +70,7 @@ export async function signInWithPassword(_prev: ActionState, formData: FormData)
   if (!parsed.success) return fromZodError(parsed.error);
 
   const { email, password, next } = parsed.data;
+  if (!isAllowedEmail(email)) return failure(ACCOUNT_REFUSED);
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -88,6 +92,7 @@ export async function signUpWithPassword(_prev: ActionState, formData: FormData)
   if (!parsed.success) return fromZodError(parsed.error);
 
   const { email, password, next } = parsed.data;
+  if (!isAllowedEmail(email)) return failure(ACCOUNT_REFUSED);
   const callback = new URL("/auth/callback", await siteUrl());
   if (next) callback.searchParams.set("next", next);
 
