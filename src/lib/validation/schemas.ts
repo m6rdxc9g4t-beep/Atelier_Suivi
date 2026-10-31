@@ -113,6 +113,14 @@ export const loginSchema = z.object({
   next,
 });
 
+/** Code à 6 chiffres reçu par e-mail (remplace le lien sur iPhone : l'app installée et Safari ne partagent pas leurs cookies) */
+export const codeLoginSchema = loginSchema.extend({
+  code: z
+    .string({ error: "Indique le code reçu par e-mail." })
+    .transform((v) => v.replace(/\s/g, ""))
+    .pipe(z.string().regex(/^\d{6,10}$/, "Le code reçu par e-mail fait 6 chiffres.")),
+});
+
 export const passwordLoginSchema = loginSchema.extend({
   password: z.string({ error: "Indique ton mot de passe." }).min(1, "Indique ton mot de passe.").max(200),
 });
