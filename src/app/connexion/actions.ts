@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { failure, formToObject, fromZodError, success, type ActionState } from "@/lib/actions";
-import { loginSchema, passwordLoginSchema, signUpSchema } from "@/lib/validation/schemas";
+import { codeLoginSchema, loginSchema, passwordLoginSchema, signUpSchema } from "@/lib/validation/schemas";
 
 async function siteUrl() {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
@@ -14,7 +14,7 @@ async function siteUrl() {
   return `${proto}://${host}`;
 }
 
-/** Envoie un lien magique de connexion (création du compte au premier passage) */
+/** Envoie un e-mail de connexion (code à 6 chiffres + lien) ; création du compte au premier passage */
 export async function sendMagicLink(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse(formToObject(formData));
   if (!parsed.success) return fromZodError(parsed.error);
@@ -35,7 +35,30 @@ export async function sendMagicLink(_prev: ActionState, formData: FormData): Pro
       ? failure("Trop de demandes d'affilée. Patiente une minute avant de redemander un lien.")
       : failure("Le lien n'a pas pu être envoyé. Vérifie l'adresse et réessaie.");
   }
-  return success(`C'est envoyé ! Ouvre le lien reçu à ${email} pour ouvrir ton suivi.`);
+  // l'adresse revient au formulaire pour l'étape « code »
+  return { ...success(`C'est envoyé ! Recopie ici le code reçu à ${email}.`), values: { email, next: next ?? "" } };
+}
+
+/**
+ * Connexion avec le code reçu par e-mail. Contrairement au lien (?code=… lié aux cookies du navigateur
+ * qui l'a demandé), le code marche partout : app installée sur l'iPhone, Safari, autre appareil.
+ */
+export async function verifyEmailCode(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = codeLoginSchema.safeParse(formToObject(formData));
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  const { email, code, next } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
+
+  if (error) {
+    console.error("[auth] verifyOtp", error.code ?? error.status, error.message);
+    if (error.status === 429) return failure("Trop de tentatives d'affilée. Patiente une minute puis réessaie.");
+    return failure("Ce code n'est pas bon ou a expiré. Vérifie le dernier e-mail reçu, ou demande un nouveau code.");
+  }
+
+  // Arrivée par « Mot de passe oublié » : direction les Paramètres pour en choisir un nouveau
+  redirect(next ?? "/parametres");
 }
 
 /** Connexion avec e-mail + mot de passe (comptes existants) */

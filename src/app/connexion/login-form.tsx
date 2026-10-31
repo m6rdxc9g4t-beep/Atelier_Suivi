@@ -7,23 +7,56 @@ import { Field, Input } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useFormAction } from "@/lib/use-form-action";
-import { sendMagicLink, signInWithPassword, signUpWithPassword } from "./actions";
+import { sendMagicLink, signInWithPassword, signUpWithPassword, verifyEmailCode } from "./actions";
 
 type Mode = "password" | "signup" | "link";
 
-/** Même formulaire qu'Atelier Dates : connexion, création de compte, lien par e-mail */
+/** Même formulaire qu'Atelier Dates : connexion, création de compte, code par e-mail */
 export function LoginForm() {
   const params = useSearchParams();
   const [mode, setMode] = useState<Mode>("password");
   const [passwordState, passwordAction] = useFormAction(signInWithPassword);
   const [signUpState, signUpAction] = useFormAction(signUpWithPassword);
   const [linkState, linkAction] = useFormAction(sendMagicLink);
+  const [codeState, codeAction] = useFormAction(verifyEmailCode);
   const linkError = params.get("erreur") === "lien";
   const next = params.get("suite") ?? "";
   // l'e-mail déjà tapé suit d'un mode à l'autre
   const typedEmail = passwordState.values?.email ?? signUpState.values?.email ?? linkState.values?.email;
 
-  const sentState = mode === "link" ? linkState : mode === "signup" ? signUpState : null;
+  if (mode === "link" && linkState.status === "success") {
+    const email = linkState.values?.email ?? codeState.values?.email ?? "";
+    return (
+      <form key="code" action={codeAction} className="flex flex-col gap-4" noValidate>
+        <div className="rounded-[1.75rem] bg-accent-soft p-6 text-ink">
+          <Mail className="size-6 text-accent-strong" aria-hidden />
+          <p className="mt-3 font-display text-xl font-extrabold">Regarde ta boîte mail</p>
+          <p className="mt-1 text-sm text-ink-soft">{linkState.message}</p>
+        </div>
+        <input type="hidden" name="email" value={email} />
+        <input type="hidden" name="next" value={linkState.values?.next ?? next} />
+        <Field label="Code reçu par e-mail" name="code" errors={codeState.fieldErrors?.code}>
+          <Input
+            name="code"
+            defaultValue={codeState.values?.code}
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={10}
+            placeholder="123456"
+            required
+            className="text-center font-mono text-lg tracking-[0.3em]"
+            invalid={Boolean(codeState.fieldErrors?.code)}
+          />
+        </Field>
+        <FormMessage state={codeState} />
+        <SubmitButton pendingLabel="Vérification…">Valider le code</SubmitButton>
+        <SwitchLink onClick={() => setMode("password")}>Revenir à la connexion</SwitchLink>
+      </form>
+    );
+  }
+
+  const sentState = mode === "signup" ? signUpState : null;
   if (sentState?.status === "success") {
     return (
       <div className="flex flex-col gap-4">
@@ -58,7 +91,7 @@ export function LoginForm() {
         <input type="hidden" name="next" value={next} />
         {emailField(linkState)}
         <FormMessage state={linkState} />
-        <SubmitButton pendingLabel="Envoi du lien…">Recevoir un lien de connexion</SubmitButton>
+        <SubmitButton pendingLabel="Envoi du code…">Recevoir un code de connexion</SubmitButton>
         <SwitchLink onClick={() => setMode("password")}>Me connecter avec mon mot de passe</SwitchLink>
       </form>
     );
@@ -93,7 +126,7 @@ export function LoginForm() {
   return (
     <form key="password" action={passwordAction} className="flex flex-col gap-4" noValidate>
       {linkError && (
-        <FormMessage state={{ status: "error", message: "Ce lien a expiré ou a déjà servi. Connecte-toi avec ton mot de passe ou demande un nouveau lien." }} />
+        <FormMessage state={{ status: "error", message: "Ce lien a expiré ou a déjà servi. Connecte-toi avec ton mot de passe ou demande un code par e-mail." }} />
       )}
       <input type="hidden" name="next" value={next} />
       {emailField(passwordState)}
@@ -110,7 +143,7 @@ export function LoginForm() {
       <SubmitButton pendingLabel="Connexion…">Se connecter</SubmitButton>
       <div className="-my-1 flex flex-col">
         <SwitchLink onClick={() => setMode("signup")}>Pas encore de compte ? Créer un compte</SwitchLink>
-        <SwitchLink onClick={() => setMode("link")}>Mot de passe oublié ? Recevoir un lien par e-mail</SwitchLink>
+        <SwitchLink onClick={() => setMode("link")}>Mot de passe oublié ? Recevoir un code par e-mail</SwitchLink>
       </div>
     </form>
   );

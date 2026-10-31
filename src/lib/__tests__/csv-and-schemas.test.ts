@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { centsToFrench, tresorerieCsv } from "@/lib/csv";
 import { formatSignedCents } from "@/lib/format";
-import { completeWithLineSchema, loginSchema, passwordChangeSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
+import { codeLoginSchema, completeWithLineSchema, loginSchema, passwordChangeSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
 
 describe("export CSV pour Trésorerie", () => {
   const csv = tresorerieCsv([
@@ -81,5 +81,17 @@ describe("création de compte et mot de passe", () => {
   it("changement de mot de passe : deux saisies identiques", () => {
     expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau12" }).success).toBe(true);
     expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau13" }).success).toBe(false);
+  });
+});
+
+describe("connexion par code reçu par e-mail", () => {
+  it("accepte le code à 6 chiffres, espaces retirés", () => {
+    const r = codeLoginSchema.safeParse({ email: "toi@exemple.fr", code: " 123 456 " });
+    expect(r.success && r.data.code).toBe("123456");
+  });
+
+  it("refuse un code qui n'est pas fait de chiffres", () => {
+    expect(codeLoginSchema.safeParse({ email: "toi@exemple.fr", code: "12ab56" }).success).toBe(false);
+    expect(codeLoginSchema.safeParse({ email: "toi@exemple.fr", code: "123" }).success).toBe(false);
   });
 });
