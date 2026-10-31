@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PASSWORD_MIN_LENGTH } from "@/lib/meta";
 import { optionalDate, optionalText, requiredDate, requiredText, uuid } from "./common";
 
 const empty = (v: unknown) => v === undefined || v === null || (typeof v === "string" && v.trim() === "");
@@ -117,6 +118,25 @@ export const passwordLoginSchema = z.object({
   password: z.string({ error: "Indique ton mot de passe." }).min(1, "Indique ton mot de passe."),
   next,
 });
+
+const newPassword = z
+  .string({ error: "Choisis un mot de passe." })
+  .min(PASSWORD_MIN_LENGTH, `Le mot de passe doit faire au moins ${PASSWORD_MIN_LENGTH} caractères.`)
+  .max(72, "Le mot de passe ne peut pas dépasser 72 caractères.");
+
+export const signUpSchema = z.object({
+  email: z.email({ error: "Adresse e-mail invalide." }),
+  password: newPassword,
+  next,
+});
+
+export const newPasswordSchema = z
+  .object({
+    password: newPassword,
+    confirm: z.string({ error: "Retape le mot de passe." }),
+    next,
+  })
+  .refine((v) => v.password === v.confirm, { path: ["confirm"], error: "Les deux mots de passe ne sont pas identiques." });
 
 export const daySchema = requiredDate;
 export { uuid };

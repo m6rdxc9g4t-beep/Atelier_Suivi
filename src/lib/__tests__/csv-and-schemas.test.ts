@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { centsToFrench, tresorerieCsv } from "@/lib/csv";
 import { formatSignedCents } from "@/lib/format";
-import { completeWithLineSchema, taskSchema } from "@/lib/validation/schemas";
+import { completeWithLineSchema, newPasswordSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
 
 describe("export CSV pour Trésorerie", () => {
   const csv = tresorerieCsv([
@@ -58,5 +58,23 @@ describe("coche avec montant", () => {
       kind: "depense",
     });
     expect(r.success && r.data.amount).toBe(890);
+  });
+});
+
+describe("création de compte et mot de passe", () => {
+  it("exige une adresse valide et au moins 6 caractères", () => {
+    expect(signUpSchema.safeParse({ email: "toi@exemple.fr", password: "secret" }).success).toBe(true);
+    expect(signUpSchema.safeParse({ email: "toi@exemple.fr", password: "court" }).success).toBe(false);
+    expect(signUpSchema.safeParse({ email: "pas-une-adresse", password: "secret12" }).success).toBe(false);
+  });
+  it("n'accepte que des chemins internes pour la suite", () => {
+    const r = signUpSchema.safeParse({ email: "toi@exemple.fr", password: "secret", next: "//evil.example" });
+    expect(r.success && r.data.next).toBeUndefined();
+  });
+  it("le nouveau mot de passe doit être tapé deux fois à l'identique", () => {
+    expect(newPasswordSchema.safeParse({ password: "nouveau1", confirm: "nouveau1" }).success).toBe(true);
+    const r = newPasswordSchema.safeParse({ password: "nouveau1", confirm: "nouveau2" });
+    expect(r.success).toBe(false);
+    expect(!r.success && r.error.issues[0].path).toEqual(["confirm"]);
   });
 });
