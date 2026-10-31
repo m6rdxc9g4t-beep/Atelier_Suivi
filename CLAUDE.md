@@ -36,7 +36,8 @@ Charte Atelier « néon monochrome » : toute l'app dans sa couleur signature, l
 ne jamais la modifier ici.
 Logo complet : `public/brand/logo-atelier-suivi.png` (aussi dans le kit, `logos/suivi.png`). Icônes : le logo complet pour
 l'app web hors iPhone (`public/icons/icon-*.png`, `apple-icon-main.png`) et pour l'app Mac (`mac/`) ; l'iPhone garde
-l'onde (`apple-icon-iphone.png`, `iphone-*.png`, `manifest-iphone.webmanifest`), servie par `src/proxy.ts` et
+l'onde dans un cadre néon chromé, comme Cuisine (source `docs/brand/icone-iphone.svg`, PNG par
+`node scripts/icones-iphone.mjs` : `apple-icon-iphone.png`, `iphone-*.png` ; `manifest-iphone.webmanifest`), servie par `src/proxy.ts` et
 `src/components/theme/iphone-icons.tsx`, comme Atelier Dates. Favicon : `src/app/icon.svg`.
 Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-surface`, `bg-sunken`, `text-ink`,
 `text-ink-soft`, `border-edge`, `border-edge-soft`, `divide-line`, `bg-accent` / `text-accent-ink`, `bg-accent-soft`,
