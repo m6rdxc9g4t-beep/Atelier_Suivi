@@ -11,11 +11,8 @@ import { sendMagicLink, signInWithPassword, signUpWithPassword, verifyEmailCode 
 
 type Mode = "password" | "signup" | "link";
 
-/**
- * Même formulaire qu'Atelier Dates : connexion, création de compte, code par e-mail.
- * `accountEmail` (compte unique, SUIVI_ACCOUNT_EMAIL) : adresse pré-remplie et fixe, pas de création de compte.
- */
-export function LoginForm({ accountEmail }: { accountEmail?: string | null }) {
+/** Même formulaire qu'Atelier Dates : connexion, création de compte, code par e-mail */
+export function LoginForm() {
   const params = useSearchParams();
   const [mode, setMode] = useState<Mode>("password");
   const [passwordState, passwordAction] = useFormAction(signInWithPassword);
@@ -23,10 +20,9 @@ export function LoginForm({ accountEmail }: { accountEmail?: string | null }) {
   const [linkState, linkAction] = useFormAction(sendMagicLink);
   const [codeState, codeAction] = useFormAction(verifyEmailCode);
   const linkError = params.get("erreur") === "lien";
-  const accountError = params.get("erreur") === "compte";
   const next = params.get("suite") ?? "";
   // l'e-mail déjà tapé suit d'un mode à l'autre
-  const typedEmail = accountEmail ?? passwordState.values?.email ?? signUpState.values?.email ?? linkState.values?.email;
+  const typedEmail = passwordState.values?.email ?? signUpState.values?.email ?? linkState.values?.email;
 
   if (mode === "link" && linkState.status === "success") {
     const email = linkState.values?.email ?? codeState.values?.email ?? "";
@@ -78,9 +74,7 @@ export function LoginForm({ accountEmail }: { accountEmail?: string | null }) {
     <Field label="Ton adresse e-mail" name="email" errors={state.fieldErrors?.email}>
       <Input
         name="email"
-        defaultValue={accountEmail ?? state.values?.email ?? typedEmail}
-        readOnly={Boolean(accountEmail)}
-        className={accountEmail ? "text-ink-soft" : undefined}
+        defaultValue={state.values?.email ?? typedEmail}
         type="email"
         autoComplete="email"
         inputMode="email"
@@ -131,7 +125,6 @@ export function LoginForm({ accountEmail }: { accountEmail?: string | null }) {
 
   return (
     <form key="password" action={passwordAction} className="flex flex-col gap-4" noValidate>
-      {accountError && <FormMessage state={{ status: "error", message: "Suivi est réservé à un seul compte : connecte-toi avec l'adresse déjà remplie." }} />}
       {linkError && (
         <FormMessage state={{ status: "error", message: "Ce lien a expiré ou a déjà servi. Connecte-toi avec ton mot de passe ou demande un code par e-mail." }} />
       )}
@@ -149,7 +142,7 @@ export function LoginForm({ accountEmail }: { accountEmail?: string | null }) {
       <FormMessage state={passwordState} />
       <SubmitButton pendingLabel="Connexion…">Se connecter</SubmitButton>
       <div className="-my-1 flex flex-col">
-        {!accountEmail && <SwitchLink onClick={() => setMode("signup")}>Pas encore de compte ? Créer un compte</SwitchLink>}
+        <SwitchLink onClick={() => setMode("signup")}>Pas encore de compte ? Créer un compte</SwitchLink>
         <SwitchLink onClick={() => setMode("link")}>Mot de passe oublié ? Recevoir un code par e-mail</SwitchLink>
       </div>
     </form>

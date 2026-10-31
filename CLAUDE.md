@@ -13,9 +13,6 @@ envoyée à Trésorerie par le script du Mac (ou exportée en CSV). Même pile e
 - **Accès aux données** : toujours via `getUserContext()` (`src/lib/dal.ts`), client Supabase agissant avec la session
   (soumis à RLS). Jamais de clé `service_role` dans l'app. Lectures communes dans `src/lib/queries.ts` (pagination
   au-delà de 1 000 lignes).
-- **Compte unique** : `SUIVI_ACCOUNT_EMAIL` (Vercel, `.env.local`) réserve l'app à ce compte (`src/lib/account.ts`) :
-  adresse pré-remplie et fixe sur `/connexion`, pas de création de compte, autre session fermée par le proxy.
-  L'adresse ne doit pas apparaître dans le dépôt (public).
 - **Server Actions** : un `actions.ts` par onglet ; validation Zod (`src/lib/validation/schemas.ts`) ; erreurs Postgres
   traduites par `fromDbError` ; `refresh()` (next/cache) après chaque écriture. Côté client : `useFormAction` ou `<ActionForm>`.
 - **Règles de récurrence** : `src/lib/recurrence.ts`, fonctions pures sur des jours « AAAA-MM-JJ » (UTC), testées.
