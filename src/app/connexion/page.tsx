@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Activity } from "lucide-react";
 import { LoginForm } from "./login-form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { accountEmail } from "@/lib/account";
 
 export const metadata: Metadata = { title: "Connexion" };
 
@@ -23,7 +24,7 @@ export default function LoginPage() {
           Rappels quotidiens, habitudes, et les dépenses qui partent toutes seules vers atelier_Trésorerie.
         </p>
         <Suspense fallback={<Skeleton className="h-64" />}>
-          <LoginForm />
+          <LoginForm accountEmail={accountEmail()} />
         </Suspense>
       </div>
     </main>
