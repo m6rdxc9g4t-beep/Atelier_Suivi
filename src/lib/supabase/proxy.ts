@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { isAllowedEmail } from "@/lib/account";
 import { getSupabaseEnv } from "@/lib/env";
 import type { Database } from "./database.types";
 
@@ -30,18 +29,8 @@ export async function updateSession(request: NextRequest) {
 
   // Ne rien intercaler entre la création du client et getClaims().
   const { data } = await supabase.auth.getClaims();
-  const { pathname } = request.nextUrl;
-
-  // Compte unique (SUIVI_ACCOUNT_EMAIL) : toute autre session est fermée
-  if (data?.claims?.sub && !isAllowedEmail(data.claims.email)) {
-    await supabase.auth.signOut();
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/connexion";
-    redirectUrl.search = "?erreur=compte";
-    return withSessionCookies(NextResponse.redirect(redirectUrl), response);
-  }
-
   const isLoggedIn = Boolean(data?.claims?.sub);
+  const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   if (!isLoggedIn && !isPublic) {
