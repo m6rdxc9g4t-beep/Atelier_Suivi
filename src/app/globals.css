@@ -4,17 +4,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------------------------------------------------
-   Couleur signature d'atelier_Suivi : cyan #15AABF.
-   Elle n'existe pas encore dans le kit commun (src/styles/atelier-brand/atelier-brand.css,
-   copie exacte à ne jamais modifier ici) : elle est posée ici en attendant d'être ajoutée
-   à la source, Atelier_Projets/design-system/brand/ (--atelier-sig-suivi).
-   --------------------------------------------------------------------------- */
-html[data-atelier-app="suivi"] {
-  --atelier-signature: #15aabf;
-  --atelier-signature-contrast: #0b0b0f;
-}
-
-/* ---------------------------------------------------------------------------
    Design tokens — charte Atelier « néon monochrome »
    Fonds, surfaces, bordures, textes et halos sont branchés sur les jetons --atelier-*
    du kit, qui changent eux-mêmes de valeur en thème sombre (.dark sur <html>).

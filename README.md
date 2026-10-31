@@ -7,7 +7,10 @@ acheté en pharmacie, un abonnement payé), une ligne de dépense est préparée
 **Stack :** Next.js 16 (App Router, Cache Components) · React 19 · TypeScript · Tailwind CSS 4 · Supabase (Postgres,
 Auth, RLS) · Zod · Lucide · Vercel. Même base qu'Atelier Dates ; couleur signature : cyan `#15AABF`.
 
-Installable comme une app : Safari → *Partager → Sur l'écran d'accueil* (iPhone), *Fichier → Ajouter au Dock* (Mac).
+<p align="center"><img src="public/brand/logo-atelier-suivi.webp" alt="atelier_Suivi" width="280"></p>
+
+Installable comme une app : Safari → *Partager → Sur l'écran d'accueil* (iPhone, icône « onde »), *Fichier → Ajouter
+au Dock* (Mac, logo complet). App Mac native avec le logo : dossier [`mac/`](mac/README.md).
 
 ---
 

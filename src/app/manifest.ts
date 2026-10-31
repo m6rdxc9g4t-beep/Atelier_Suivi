@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-/** Rend l'app installable : écran d'accueil de l'iPhone, Dock du Mac (Safari) */
+/** Rend l'app installable : Dock du Mac (Safari), logo complet. L'iPhone reçoit public/icons/manifest-iphone.webmanifest (proxy). */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",

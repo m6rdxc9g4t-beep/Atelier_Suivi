@@ -30,10 +30,15 @@ envoyée à Trésorerie par le script du Mac (ou exportée en CSV). Même pile e
   relevés de Trésorerie (Date ; Libellé ; Montant ; Catégorie).
 
 ## Design
-Charte Atelier « néon monochrome » : toute l'app dans sa couleur signature, le **cyan #15AABF** (posé dans
-`src/app/globals.css` sur `html[data-atelier-app="suivi"]`, en attendant `--atelier-sig-suivi` dans la source du kit,
-Atelier_Projets/design-system/brand/). `src/styles/atelier-brand/atelier-brand.css` est une copie exacte du kit :
-ne jamais la modifier ici. Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-surface`, `bg-sunken`, `text-ink`,
+Charte Atelier « néon monochrome » : toute l'app dans sa couleur signature, le **cyan #15AABF**
+(`--atelier-sig-suivi` du kit, activée par `data-atelier-app="suivi"` sur `<html>`).
+`src/styles/atelier-brand/atelier-brand.css` est une copie exacte du kit (source : Atelier_Projets/design-system/brand/) :
+ne jamais la modifier ici.
+Logo complet : `public/brand/logo-atelier-suivi.png` (aussi dans le kit, `logos/suivi.png`). Icônes : le logo complet pour
+l'app web hors iPhone (`public/icons/icon-*.png`, `apple-icon-main.png`) et pour l'app Mac (`mac/`) ; l'iPhone garde
+l'onde (`apple-icon-iphone.png`, `iphone-*.png`, `manifest-iphone.webmanifest`), servie par `src/proxy.ts` et
+`src/components/theme/iphone-icons.tsx`, comme Atelier Dates. Favicon : `src/app/icon.svg`.
+Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-surface`, `bg-sunken`, `text-ink`,
 `text-ink-soft`, `border-edge`, `border-edge-soft`, `divide-line`, `bg-accent` / `text-accent-ink`, `bg-accent-soft`,
 `text-accent-strong`, `neon-panel`, `glow-accent`, `neon-title`, `eyebrow`. Couleurs qui portent un sens, jamais la
 signature : `good` / `bad`, `cat-*` (catégories) et `treso` (bleu roi de Trésorerie, pour tout ce qui part vers elle).
