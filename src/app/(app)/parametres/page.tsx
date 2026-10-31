@@ -9,11 +9,10 @@ import { ListSkeleton } from "@/components/ui/skeleton";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { ThemePicker } from "@/components/theme/theme-picker";
 import { signOut } from "@/app/connexion/actions";
-import { PasswordForm } from "@/app/connexion/password-form";
 import { getUserContext } from "@/lib/dal";
 import { getSupabaseEnv } from "@/lib/env";
 import { deleteSyncToken } from "./actions";
-import { ProfileForm, TokenCreator } from "./settings-forms";
+import { PasswordForm, ProfileForm, TokenCreator } from "./settings-forms";
 
 export const metadata: Metadata = { title: "Paramètres" };
 
@@ -98,7 +97,7 @@ async function SettingsContent() {
           Connecté en tant que <span className="font-semibold text-ink">{email}</span>. Le compte est commun aux apps Atelier qui partagent la même base
           (comme Atelier Cuisine) : un nouveau mot de passe vaut aussi pour elles.
         </p>
-        <PasswordForm compact />
+        <PasswordForm />
       </Panel>
 
       <Panel>

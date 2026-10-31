@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { centsToFrench, tresorerieCsv } from "@/lib/csv";
 import { formatSignedCents } from "@/lib/format";
-import { completeWithLineSchema, newPasswordSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
+import { completeWithLineSchema, loginSchema, passwordChangeSchema, signUpSchema, taskSchema } from "@/lib/validation/schemas";
 
 describe("export CSV pour Trésorerie", () => {
   const csv = tresorerieCsv([
@@ -62,19 +62,24 @@ describe("coche avec montant", () => {
 });
 
 describe("création de compte et mot de passe", () => {
-  it("exige une adresse valide et au moins 6 caractères", () => {
-    expect(signUpSchema.safeParse({ email: "toi@exemple.fr", password: "secret" }).success).toBe(true);
-    expect(signUpSchema.safeParse({ email: "toi@exemple.fr", password: "court" }).success).toBe(false);
-    expect(signUpSchema.safeParse({ email: "pas-une-adresse", password: "secret12" }).success).toBe(false);
+  const compte = { email: "toi@exemple.fr", password: "motdepasse", confirm: "motdepasse" };
+  it("exige une adresse valide, 8 caractères et deux saisies identiques", () => {
+    expect(signUpSchema.safeParse(compte).success).toBe(true);
+    expect(signUpSchema.safeParse({ ...compte, password: "court", confirm: "court" }).success).toBe(false);
+    expect(signUpSchema.safeParse({ ...compte, email: "pas-une-adresse" }).success).toBe(false);
+    const r = signUpSchema.safeParse({ ...compte, confirm: "autrechose" });
+    expect(!r.success && r.error.issues[0].path).toEqual(["confirm"]);
+  });
+  it("nettoie l'adresse tapée sur iPhone", () => {
+    const r = loginSchema.safeParse({ email: " Toi@Exemple.fr " });
+    expect(r.success && r.data.email).toBe("toi@exemple.fr");
   });
   it("n'accepte que des chemins internes pour la suite", () => {
-    const r = signUpSchema.safeParse({ email: "toi@exemple.fr", password: "secret", next: "//evil.example" });
+    const r = signUpSchema.safeParse({ ...compte, next: "//evil.example" });
     expect(r.success && r.data.next).toBeUndefined();
   });
-  it("le nouveau mot de passe doit être tapé deux fois à l'identique", () => {
-    expect(newPasswordSchema.safeParse({ password: "nouveau1", confirm: "nouveau1" }).success).toBe(true);
-    const r = newPasswordSchema.safeParse({ password: "nouveau1", confirm: "nouveau2" });
-    expect(r.success).toBe(false);
-    expect(!r.success && r.error.issues[0].path).toEqual(["confirm"]);
+  it("changement de mot de passe : deux saisies identiques", () => {
+    expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau12" }).success).toBe(true);
+    expect(passwordChangeSchema.safeParse({ password: "nouveau12", confirm: "nouveau13" }).success).toBe(false);
   });
 });

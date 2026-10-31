@@ -65,6 +65,3 @@ export const DEFAULT_ACCOUNT = "Compte courant";
 
 export const categoryOf = (value: TaskCategory) => CATEGORIES.find((c) => c.value === value) ?? CATEGORIES[CATEGORIES.length - 1];
 export const momentOf = (value: TaskMoment) => MOMENTS.find((m) => m.value === value) ?? MOMENTS[MOMENTS.length - 1];
-
-/** Longueur minimale d'un mot de passe : celle du projet Supabase partagé avec Atelier Cuisine (`minimum_password_length`) */
-export const PASSWORD_MIN_LENGTH = 6;
