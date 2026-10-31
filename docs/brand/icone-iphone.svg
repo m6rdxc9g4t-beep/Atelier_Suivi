@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- atelier_Suivi : icône iPhone, sur le modèle de celle d'Atelier Cuisine (cadre néon chromé + onde) -->
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#173a42"/>
+      <stop offset="1" stop-color="#060e10"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ecfdff"/>
+      <stop offset="0.35" stop-color="#7ee3f0"/>
+      <stop offset="0.7" stop-color="#15aabf"/>
+      <stop offset="1" stop-color="#7ee3f0"/>
+    </linearGradient>
+    <linearGradient id="onde" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecfdff"/>
+      <stop offset="0.5" stop-color="#9beef8"/>
+      <stop offset="1" stop-color="#3cc6d8"/>
+    </linearGradient>
+    <filter id="halo" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="20" result="flou"/>
+      <feMerge><feMergeNode in="flou"/><feMergeNode in="flou"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo-fin" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="flou"/>
+      <feMerge><feMergeNode in="flou"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#fond)"/>
+  <!-- cadre chromé lumineux -->
+  <rect x="44" y="44" width="936" height="936" rx="196" fill="none" stroke="url(#chrome)" stroke-width="22" filter="url(#halo-fin)"/>
+  <rect x="70" y="70" width="884" height="884" rx="174" fill="none" stroke="#7ee3f0" stroke-opacity="0.25" stroke-width="4"/>
+  <!-- onde de Suivi -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#halo)">
+    <path d="M206 532h142l82-212 156 384 76-172h162" stroke="#15aabf" stroke-width="84" stroke-opacity="0.55"/>
+    <path d="M206 532h142l82-212 156 384 76-172h162" stroke="url(#onde)" stroke-width="54"/>
+  </g>
+  <!-- cœur clair du tube néon -->
+  <path d="M206 532h142l82-212 156 384 76-172h162" fill="none" stroke="#ffffff" stroke-opacity="0.7" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- reflets spéculaires -->
+  <circle cx="210" cy="132" r="9" fill="#ecfdff"/>
+  <circle cx="210" cy="132" r="26" fill="#ecfdff" opacity="0.18"/>
+  <circle cx="862" cy="880" r="7" fill="#ecfdff"/>
+</svg>
