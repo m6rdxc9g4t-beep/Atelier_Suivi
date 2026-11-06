@@ -19,11 +19,8 @@
   --paper: var(--atelier-bg);
   --sidebar: var(--atelier-sidebar);
   --surface: var(--atelier-surface);
-  /* Survol et entrée courante, en clair : un cran SOUS le fond et la barre latérale. Ceux du kit (§3 bis,
-     teintés à partir du blanc pour les cartes de la v1) sont aussi clairs que le fond : survol invisible
-     sur les listes, entrée courante invisible dans la barre latérale. En sombre : ceux du kit. */
-  --sunken: color-mix(in oklab, var(--atelier-signature) 8%, #eeeff2);
-  --selected: color-mix(in oklab, var(--atelier-signature) 10%, #ebecf0);
+  --sunken: var(--atelier-surface-2);
+  --selected: var(--atelier-surface-3);
   --field: var(--atelier-field);
   --ink: var(--atelier-text);
   /* Libellés : entre le texte et le gris secondaire, pour suivre la palette teintée */
@@ -63,7 +60,7 @@
   --cat-autre: #737b84;
 
   /* Flèche des menus déroulants (gris discret de la palette) */
-  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b707e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23546975' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   /* Échelle typographique : 13 px de base sur ordinateur, 15 px sur téléphone (voir plus bas) */
   --fs-meta: 12.5px;
@@ -91,8 +88,6 @@
 }
 
 :root.dark {
-  --sunken: var(--atelier-surface-2);
-  --selected: var(--atelier-surface-3);
   --good: var(--atelier-up);
   --bad: var(--atelier-down);
   --good-soft: color-mix(in oklab, var(--atelier-up) 14%, transparent);
