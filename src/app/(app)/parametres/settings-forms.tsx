@@ -66,7 +66,7 @@ export function TokenCreator({ supabaseUrl, supabaseKey }: { supabaseUrl: string
   return (
     <div className="flex flex-col gap-4">
       <form action={action} className="flex flex-col gap-3 sm:flex-row sm:items-end" noValidate>
-        <Field label="Nom de l'appareil" name="label" hint="L'ordinateur où tourne atelier_Trésorerie." errors={state.fieldErrors?.label} className="flex-1">
+        <Field label="Nom de l'appareil" name="label" hint="L'ordinateur où tourne Atelier Trésorerie." errors={state.fieldErrors?.label} className="flex-1">
           <Input name="label" maxLength={60} defaultValue="Mac" />
         </Field>
         <SubmitButton pendingLabel="Création…">
@@ -77,10 +77,10 @@ export function TokenCreator({ supabaseUrl, supabaseKey }: { supabaseUrl: string
       {state.status === "error" && <FormMessage state={state} />}
 
       {state.token && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-accent bg-accent-faint p-4">
-          <p className="text-sm font-semibold text-ink">{state.message}</p>
+        <div className="flex flex-col gap-3 rounded-lg border border-accent/40 bg-accent-faint p-4">
+          <p className="font-medium text-ink">{state.message}</p>
           <div className="flex items-center gap-2">
-            <code className="min-w-0 flex-1 overflow-x-auto rounded-xl border border-edge-soft bg-field px-3 py-2 font-mono text-xs whitespace-nowrap text-ink select-all">
+            <code className="min-w-0 flex-1 overflow-x-auto rounded-md border border-edge-soft bg-field px-3 py-2 font-mono text-small whitespace-nowrap text-ink select-all">
               {state.token}
             </code>
             <button type="button" onClick={() => copy(state.token!, "token")} className={buttonClasses("soft", "sm")}>
@@ -88,12 +88,12 @@ export function TokenCreator({ supabaseUrl, supabaseKey }: { supabaseUrl: string
               {copied === "token" ? "Copiée" : "Copier"}
             </button>
           </div>
-          <p className="text-sm text-ink-soft">
-            Sur le Mac, dans le dossier du projet atelier_Suivi, colle cette commande dans le Terminal : elle installe l&apos;envoi automatique toutes les 15
+          <p className="text-muted">
+            Sur le Mac, dans le dossier du projet Atelier Suivi, colle cette commande dans le Terminal : elle installe l&apos;envoi automatique toutes les 15
             minutes.
           </p>
           <div className="flex items-start gap-2">
-            <code className="min-w-0 flex-1 overflow-x-auto rounded-xl border border-edge-soft bg-field px-3 py-2 font-mono text-xs whitespace-pre text-ink select-all">
+            <code className="min-w-0 flex-1 overflow-x-auto rounded-md border border-edge-soft bg-field px-3 py-2 font-mono text-small whitespace-pre text-ink select-all">
               {command}
             </code>
             <button type="button" onClick={() => copy(command, "command")} className={buttonClasses("soft", "sm")}>

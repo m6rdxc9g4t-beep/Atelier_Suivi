@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
-/* Le thème sombre suit la classe .dark posée sur <html> par le script de thème */
+/* Le thème sombre suit la classe .dark posée sur <html> par le script de thème commun */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------------------------------------------------
-   Design tokens — charte Atelier « néon monochrome »
-   Fonds, surfaces, bordures, textes et halos sont branchés sur les jetons --atelier-*
-   du kit, qui changent eux-mêmes de valeur en thème sombre (.dark sur <html>).
+   Design tokens — charte Atelier v2 « Linear » (Atelier_Deploy/DESIGN.md)
+   Structure neutre commune (gris froids, clair et sombre) branchée sur les jetons --atelier-*
+   du kit ; la signature de Suivi (cyan #008295) ne sert qu'à l'accent : bouton principal,
+   case cochée, sélection, focus, liens, séries d'une seule mesure.
    Couleurs à part (elles portent un sens) : réussite / erreur, catégories,
-   et le bleu roi d'atelier_Trésorerie pour tout ce qui part vers elle.
+   et le bleu de Trésorerie pour tout ce qui part vers elle.
    --------------------------------------------------------------------------- */
 :root {
   --paper: var(--atelier-bg);
@@ -18,7 +19,9 @@
   --selected: var(--atelier-surface-3);
   --field: var(--atelier-field);
   --ink: var(--atelier-text);
-  --ink-soft: var(--atelier-muted);
+  --ink-2: #393c42;
+  --muted: var(--atelier-muted);
+  --faint: var(--atelier-faint);
   --edge: var(--atelier-border);
   --edge-soft: var(--atelier-border-soft);
   --line: var(--atelier-line);
@@ -28,13 +31,16 @@
   --accent-soft: var(--atelier-signature-soft);
   --accent-faint: var(--atelier-signature-faint);
   --accent-strong: var(--atelier-ink);
+  --accent-hover: var(--atelier-signature-hover);
 
-  --good: #2b8a3e;
-  --good-soft: #e3f4e6;
-  --bad: #c92a2a;
-  --bad-soft: #fbe4e4;
-  --treso: #3b5bdb;
-  --treso-soft: color-mix(in oklab, #3b5bdb 12%, transparent);
+  --good: var(--atelier-up);
+  --good-soft: color-mix(in oklab, var(--atelier-up) 10%, transparent);
+  --bad: var(--atelier-down);
+  --bad-soft: color-mix(in oklab, var(--atelier-down) 9%, transparent);
+  --warn: var(--atelier-warn);
+  /* Trésorerie : sa couleur signature (bleu roi), en texte comme en voile */
+  --treso: var(--atelier-sig-tresorerie);
+  --treso-soft: color-mix(in oklab, var(--atelier-sig-tresorerie) 12%, transparent);
 
   --cat-sante: #e03131;
   --cat-sport: #e8590c;
@@ -43,16 +49,37 @@
   --cat-bien-etre: #9b5de5;
   --cat-autre: #868e96;
 
+  /* Échelle typographique : 13 px de base sur ordinateur, 15 px sur téléphone (voir plus bas) */
+  --fs-meta: 12.5px;
+  --fs-small: 13px;
+  --fs-ui: 15px;
+  --fs-strong: 16px;
+  --fs-title: 17px;
+  --fs-page: 22px;
+  /* Champs : 16 px sur téléphone, sinon iOS zoome la page au focus */
+  --fs-input: 16px;
+
   color-scheme: light;
 }
 
+@media (min-width: 64rem) {
+  :root {
+    --fs-meta: 11.5px;
+    --fs-small: 12px;
+    --fs-ui: 13px;
+    --fs-strong: 14px;
+    --fs-title: 15px;
+    --fs-page: 20px;
+    --fs-input: 14px;
+  }
+}
+
 :root.dark {
-  --good: #69db7c;
-  --good-soft: #1b3322;
-  --bad: #ff8787;
-  --bad-soft: #3d1d1f;
-  --treso: #91a7ff;
-  --treso-soft: color-mix(in oklab, #5b7cfa 18%, transparent);
+  --ink-2: #c8cad0;
+  --good-soft: color-mix(in oklab, var(--atelier-up) 14%, transparent);
+  --bad-soft: color-mix(in oklab, var(--atelier-down) 13%, transparent);
+  --treso: color-mix(in oklab, var(--atelier-sig-tresorerie) 62%, #ffffff);
+  --treso-soft: color-mix(in oklab, var(--atelier-sig-tresorerie) 20%, transparent);
 
   --cat-sante: #ff8787;
   --cat-sport: #ffa94d;
@@ -72,7 +99,10 @@
   --color-selected: var(--selected);
   --color-field: var(--field);
   --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
+  --color-ink-2: var(--ink-2);
+  --color-ink-soft: var(--muted);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-line: var(--line);
   --color-edge: var(--edge);
   --color-edge-soft: var(--edge-soft);
@@ -81,65 +111,93 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-faint: var(--accent-faint);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-hover: var(--accent-hover);
   --color-good: var(--good);
   --color-good-soft: var(--good-soft);
   --color-bad: var(--bad);
   --color-bad-soft: var(--bad-soft);
+  --color-warn: var(--warn);
   --color-treso: var(--treso);
   --color-treso-soft: var(--treso-soft);
 
-  --font-display: "Atelier Brand", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
-  --font-sans: "Nunito Sans Variable", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-sans: var(--atelier-font);
+  --font-mono: var(--atelier-font-mono);
+
+  --text-meta: var(--fs-meta);
+  --text-small: var(--fs-small);
+  --text-ui: var(--fs-ui);
+  --text-strong: var(--fs-strong);
+  --text-title: var(--fs-title);
+  --text-page: var(--fs-page);
+  --text-input: var(--fs-input);
+
+  /* Rayons de la suite : 4 touches, cases · 5 petites icônes · 7 boutons, champs · 10 panneaux */
+  --radius-xs: 4px;
+  --radius-sm: var(--atelier-radius-sm);
+  --radius-md: var(--atelier-radius-md);
+  --radius-lg: var(--atelier-radius-lg);
+
+  /* Plat au repos : seul ce qui flotte (dialogue, message) a une ombre */
+  --shadow-pop: var(--atelier-glow-strong);
+  --shadow-pressed: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px var(--line);
 }
 
 @layer base {
   html {
     background: var(--paper);
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    /* Fine grille + lueur en haut, dans la couleur de l'app.
-       --atelier-backdrop contient des tailles de motif : uniquement dans le raccourci `background`. */
-    background: var(--atelier-backdrop), var(--atelier-bg);
-    background-attachment: fixed;
+    background: var(--paper);
     color: var(--ink);
-    font-family: var(--font-sans);
+    font-family: var(--atelier-font);
+    font-size: var(--fs-ui);
+    line-height: 1.45;
+    font-feature-settings: "cv11", "ss03";
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
   }
   ::selection {
-    background: var(--accent-soft);
+    background: color-mix(in oklab, var(--accent) 30%, transparent);
     color: var(--ink);
   }
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+  ::placeholder {
+    color: var(--faint);
+    opacity: 1;
+  }
+  a {
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--edge-soft) transparent;
+  }
+  button,
+  summary,
+  [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
 }
 
-/* Carte / panneau : halo dans la couleur de l'app (bordure : border-edge) */
-@utility neon-panel {
-  box-shadow: var(--atelier-glow);
-}
-@utility neon-panel-strong {
-  box-shadow: var(--atelier-glow-strong);
-}
-/* Halo de la signature (case cochée, anneau de progression, barres) */
-@utility glow-accent {
-  box-shadow: var(--atelier-signature-glow);
-}
-@utility focus-glow {
+/* Champ en focus : bord accent et voile de 3 px (pas de contour natif) */
+@utility focus-ring {
   box-shadow: var(--atelier-focus);
 }
-@utility neon-title {
-  text-shadow: var(--atelier-text-glow);
-}
-/* Étiquettes en capitales (moments de la journée, en-têtes de tableau) */
-@utility eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+
+/* Flèche des menus déroulants (gris neutre lisible dans les deux thèmes) */
+@utility select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23868a94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 14px;
 }
 
 @media (prefers-reduced-motion: reduce) {

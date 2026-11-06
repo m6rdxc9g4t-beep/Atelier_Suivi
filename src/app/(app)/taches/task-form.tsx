@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Wallet } from "lucide-react";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -10,12 +11,10 @@ import { CATEGORIES, DEFAULT_ACCOUNT, MOMENTS, MONEY_KINDS, RECURRENCES, TRESORE
 import type { RecurrenceKind, TaskRow } from "@/lib/supabase/database.types";
 import { useFormAction } from "@/lib/use-form-action";
 import { cn } from "@/lib/utils";
+import { chip, segment, segmented } from "@/components/ui/segmented";
 
 type Action = (state: ActionState, formData: FormData) => Promise<ActionState>;
 
-const chip =
-  "inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-edge-soft bg-surface px-4 text-sm font-semibold text-ink-soft transition-colors " +
-  "has-checked:border-edge has-checked:bg-accent-soft has-checked:text-accent-strong has-focus-visible:outline-2 has-focus-visible:outline-accent";
 
 /** Formulaire de tâche (création et modification), avec son lien Trésorerie facultatif */
 export function TaskForm({ action, task, today }: { action: Action; task?: TaskRow; today: string }) {
@@ -49,8 +48,8 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
       </Field>
 
       <fieldset>
-        <legend className="mb-2 text-sm font-medium text-ink">Catégorie</legend>
-        <div className="flex flex-wrap gap-2">
+        <legend className="mb-2 font-medium text-ink-2">Catégorie</legend>
+        <div className="flex flex-wrap gap-1.5">
           {CATEGORIES.map((c) => (
             <label key={c.value} className={chip}>
               <input type="radio" name="category" value={c.value} defaultChecked={(v?.category ?? task?.category ?? "autre") === c.value} className="sr-only" />
@@ -62,8 +61,8 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 text-sm font-medium text-ink">Fréquence</legend>
-        <div className="flex flex-wrap gap-2">
+        <legend className="mb-2 font-medium text-ink-2">Fréquence</legend>
+        <div className="flex flex-wrap gap-1.5">
           {RECURRENCES.map((r) => (
             <label key={r.value} className={chip}>
               <input
@@ -88,10 +87,10 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
 
       {recurrence === "weekdays" && (
         <fieldset>
-          <legend className="mb-2 text-sm font-medium text-ink">Jours</legend>
-          <div className="flex flex-wrap gap-2">
+          <legend className="mb-2 font-medium text-ink-2">Jours</legend>
+          <div className="flex flex-wrap gap-1.5">
             {WEEKDAYS.map((d) => (
-              <label key={d.value} className={cn(chip, "w-11 justify-center px-0")} title={d.label}>
+              <label key={d.value} className={cn(chip, "w-10 justify-center px-0! lg:w-[30px]")} title={d.label}>
                 <input
                   type="checkbox"
                   name="weekdays"
@@ -106,7 +105,7 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
             ))}
           </div>
           {err("weekdays") && (
-            <p role="alert" className="mt-2 text-xs font-medium text-bad">
+            <p role="alert" className="mt-2 text-small font-medium text-bad">
               {err("weekdays")?.[0]}
             </p>
           )}
@@ -147,26 +146,27 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
           </Select>
         </Field>
         <Field label="Note" name="note" errors={err("note")}>
-          <Textarea name="note" maxLength={300} rows={2} className="min-h-11" placeholder="Dosage, durée, détail…" defaultValue={v?.note ?? task?.note ?? ""} />
+          <Textarea name="note" maxLength={300} rows={2} className="min-h-11! lg:min-h-9!" placeholder="Dosage, durée, détail…" defaultValue={v?.note ?? task?.note ?? ""} />
         </Field>
       </div>
 
-      <section className="flex flex-col gap-4 rounded-[1.5rem] border border-treso bg-treso-soft p-4 sm:p-5">
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold text-treso">
+      <section className={cn("flex flex-col gap-4 rounded-lg border p-4", financeOn ? "border-treso/35 bg-treso-soft/40" : "border-edge")}>
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 font-medium text-ink lg:min-h-0">
           <input
             type="checkbox"
             name="finance_enabled"
             checked={financeOn}
             onChange={(e) => setFinanceOn(e.target.checked)}
-            className="size-5 accent-[var(--treso)]"
+            className="size-4 accent-[var(--treso)]"
           />
+          <Wallet className="size-4 text-treso" aria-hidden />
           Lien Trésorerie : préparer une ligne quand je coche
         </label>
 
         {financeOn && (
           <>
-            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-ink">
-              <input type="checkbox" name="finance_ask" checked={ask} onChange={(e) => setAsk(e.target.checked)} className="size-5 accent-[var(--treso)]" />
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-ink-2 lg:min-h-0">
+              <input type="checkbox" name="finance_ask" checked={ask} onChange={(e) => setAsk(e.target.checked)} className="size-4 accent-[var(--treso)]" />
               Demander le montant à chaque fois (pharmacie, courses…)
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -179,19 +179,16 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
                   name="finance_amount"
                   inputMode="decimal"
                   placeholder="0,00"
-                  className="font-mono"
+                  className="tabular-nums"
                   defaultValue={v?.finance_amount ?? centsToInput(task?.finance_amount_cents)}
                   invalid={Boolean(err("finance_amount"))}
                 />
               </Field>
               <fieldset>
-                <legend className="mb-1.5 text-sm font-medium text-ink">Sens</legend>
-                <div className="flex gap-2">
+                <legend className="mb-1.5 font-medium text-ink-2">Sens</legend>
+                <div className={segmented}>
                   {MONEY_KINDS.map((k) => (
-                    <label
-                      key={k.value}
-                      className="flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border border-edge-soft bg-surface px-3 text-sm font-semibold text-ink-soft has-checked:border-treso has-checked:text-treso"
-                    >
+                    <label key={k.value} className={segment}>
                       <input type="radio" name="finance_kind" value={k.value} defaultChecked={(v?.finance_kind ?? task?.finance_kind ?? "depense") === k.value} className="sr-only" />
                       {k.label}
                     </label>
@@ -219,8 +216,8 @@ export function TaskForm({ action, task, today }: { action: Action; task?: TaskR
       </section>
 
       {task && (
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-ink">
-          <input type="checkbox" name="paused" defaultChecked={task.paused} className="size-5 accent-[var(--atelier-signature)]" />
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-ink-2 lg:min-h-0">
+          <input type="checkbox" name="paused" defaultChecked={task.paused} className="size-4 accent-[var(--atelier-signature)]" />
           En pause : n&apos;apparaît plus jusqu&apos;à ce que je la réactive
         </label>
       )}

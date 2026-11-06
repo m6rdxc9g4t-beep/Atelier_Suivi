@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useOptimistic, useState, useTransition } from "react";
 import { ArrowRight, Check, CheckCheck, Ellipsis, ListPlus } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { buttonClasses } from "@/components/ui/button";
+import { buttonClasses, iconButtonClasses } from "@/components/ui/button";
+import { GroupHeader } from "@/components/ui/panel";
 import { formatCents, formatSignedCents } from "@/lib/format";
 import { MOMENTS, categoryOf } from "@/lib/meta";
 import type { MoneyKind, TaskCategory, TaskMoment } from "@/lib/supabase/database.types";
@@ -90,33 +91,26 @@ export function DayList({ items, day, isFuture }: { items: DayItemView[]; day: s
 
   return (
     <>
-      <div className="space-y-5">
-        {MOMENTS.map((moment) => {
-          const group = optimistic.filter((i) => i.moment === moment.value);
-          if (!group.length) return null;
-          const n = group.filter((i) => i.done).length;
-          return (
-            <section key={moment.value} aria-labelledby={`moment-${moment.value}`}>
-              <h2 id={`moment-${moment.value}`} className="eyebrow mb-2 ml-1 flex gap-2 text-ink-soft">
-                {moment.label}
-                <span className="text-ink-soft/70 tabular-nums">
-                  {n}/{group.length}
-                </span>
-              </h2>
-              <ul className="neon-panel divide-y divide-line rounded-[1.5rem] border border-edge bg-surface">
-                {group.map((item) => (
-                  <Row key={item.id} item={item} disabled={isFuture} onToggle={() => toggle(item)} />
-                ))}
-              </ul>
-            </section>
-          );
-        })}
-      </div>
+      {MOMENTS.map((moment) => {
+        const group = optimistic.filter((i) => i.moment === moment.value);
+        if (!group.length) return null;
+        const n = group.filter((i) => i.done).length;
+        return (
+          <section key={moment.value} aria-labelledby={`moment-${moment.value}`}>
+            <GroupHeader id={`moment-${moment.value}`} title={moment.label} count={`${n}/${group.length}`} />
+            <ul>
+              {group.map((item) => (
+                <Row key={item.id} item={item} disabled={isFuture} onToggle={() => toggle(item)} />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
 
       {notice && (
         <div
           role="status"
-          className="neon-panel fixed inset-x-4 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-md items-center gap-3 rounded-2xl border border-edge bg-surface py-2 pr-2 pl-4 text-sm font-semibold text-ink lg:bottom-6"
+          className="fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-md items-center gap-2 rounded-lg border border-edge bg-surface py-1.5 pr-1.5 pl-3.5 font-medium text-ink shadow-pop lg:bottom-6 lg:left-[232px]"
         >
           <span className="min-w-0 flex-1">{notice.message}</span>
           {notice.undo && (
@@ -144,54 +138,58 @@ export function DayList({ items, day, isFuture }: { items: DayItemView[]; day: s
   );
 }
 
+/**
+ * Une tâche du jour : rond à cocher (zone de 44 px au doigt), titre, détails en gris,
+ * montant Trésorerie, accès à la modification. Sur ordinateur, ligne de 40 px.
+ */
 function Row({ item, disabled, onToggle }: { item: DayItemView; disabled: boolean; onToggle: () => void }) {
   const category = categoryOf(item.category);
   return (
-    <li className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 gap-y-1 py-2 pr-1 pl-1.5 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto]">
+    <li className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-1 border-b border-line pr-2 pl-1.5 transition-colors hover:bg-sunken/60 lg:min-h-10 lg:grid-cols-[auto_minmax(0,1fr)_auto_auto] lg:pr-3 lg:pl-2.5">
       <button
         type="button"
         onClick={onToggle}
         disabled={disabled}
         aria-pressed={item.done}
         aria-label={`${item.done ? "Décocher" : "Cocher"} : ${item.title}`}
-        className="group grid size-12 place-items-center rounded-full disabled:cursor-default"
+        className="group grid size-11 place-items-center rounded-md disabled:cursor-default lg:size-8"
       >
         <span
           className={cn(
-            "grid size-7 place-items-center rounded-full border-2 transition-[background,box-shadow,transform] group-active:scale-90",
-            item.done ? "glow-accent border-accent bg-accent text-accent-ink" : "border-edge text-transparent group-hover:glow-accent",
-            disabled && "border-dashed opacity-60",
+            "grid size-[22px] place-items-center rounded-full border-[1.5px] transition-[background-color,border-color,transform] duration-150 ease-out group-active:scale-90 lg:size-4",
+            item.done ? "border-accent bg-accent text-accent-ink" : "border-edge-soft text-transparent group-hover:border-accent",
+            disabled && "border-dashed opacity-60 group-hover:border-edge-soft",
           )}
         >
-          <Check className="size-4" strokeWidth={3.2} aria-hidden />
+          <Check className="size-3.5 lg:size-2.5" strokeWidth={3.5} aria-hidden />
         </span>
       </button>
 
-      <div className="min-w-0 py-1">
-        <p className={cn("font-semibold break-words text-ink", item.done && "text-ink-soft line-through decoration-edge")}>{item.title}</p>
-        <p className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[0.8rem] text-ink-soft">
+      <div className="min-w-0 py-2.5 lg:flex lg:flex-wrap lg:items-baseline lg:gap-x-3 lg:py-2">
+        <p className={cn("font-medium break-words text-ink", item.done && "text-muted line-through decoration-faint")}>{item.title}</p>
+        <p className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-small text-muted lg:mt-0">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full" style={{ background: category.color }} aria-hidden />
             {category.label}
           </span>
           <span>{item.recurrence}</span>
-          {item.overdue && item.dueOn && <span className="font-semibold text-bad">En retard · prévu le {shortDay(item.dueOn)}</span>}
-          {item.streak > 1 && <span className="font-mono text-accent-strong">série : {item.streak}</span>}
-          {item.paused && <span className="eyebrow text-[0.65rem]">En pause</span>}
+          {item.overdue && item.dueOn && <span className="font-medium text-bad">En retard · prévu le {shortDay(item.dueOn)}</span>}
+          {item.streak > 1 && <span className="tabular-nums">série : {item.streak}</span>}
+          {item.paused && <span className="rounded-xs border border-edge-soft px-1 text-meta">En pause</span>}
         </p>
-        {item.note && !item.done && <p className="mt-1 text-[0.8rem] text-ink-soft/90">{item.note}</p>}
+        {item.note && !item.done && <p className="mt-0.5 text-small text-faint lg:mt-0 lg:basis-full">{item.note}</p>}
       </div>
 
-      <div className="col-start-2 row-start-2 sm:col-start-3 sm:row-start-1">
+      <div className="col-start-2 row-start-2 pb-2.5 lg:col-start-3 lg:row-start-1 lg:pb-0">
         <FinanceBadge item={item} />
       </div>
 
       <Link
         href={`/taches/${item.id}`}
         aria-label={`Modifier : ${item.title}`}
-        className="col-start-3 row-start-1 grid size-11 place-items-center rounded-full text-ink-soft hover:bg-accent-faint hover:text-accent-strong sm:col-start-4"
+        className={iconButtonClasses("col-start-3 row-start-1 lg:col-start-4")}
       >
-        <Ellipsis className="size-5" aria-hidden />
+        <Ellipsis className="size-4" aria-hidden />
       </Link>
     </li>
   );
@@ -202,8 +200,8 @@ function FinanceBadge({ item }: { item: DayItemView }) {
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono text-[0.8rem] font-semibold whitespace-nowrap text-treso",
-          item.line.sent ? "border border-treso" : "bg-treso-soft",
+          "inline-flex h-6 items-center gap-1 rounded-sm px-1.5 text-small font-medium whitespace-nowrap text-treso tabular-nums",
+          item.line.sent ? "border border-treso/40" : "bg-treso-soft",
         )}
         title={item.line.sent ? "Envoyée à Trésorerie" : "En attente d'envoi vers Trésorerie"}
       >
@@ -214,7 +212,7 @@ function FinanceBadge({ item }: { item: DayItemView }) {
   }
   if (!item.finance || item.done) return null;
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-lg bg-treso-soft px-2.5 py-1 text-[0.8rem] font-semibold whitespace-nowrap text-treso">
+    <span className="inline-flex h-6 items-center gap-1 rounded-sm bg-treso-soft px-1.5 text-small font-medium whitespace-nowrap text-treso tabular-nums">
       <ArrowRight className="size-3.5" aria-hidden />
       {item.finance.ask ? "Trésorerie · montant à saisir" : `Trésorerie · ${formatCents(item.finance.amountCents ?? 0)}`}
     </span>

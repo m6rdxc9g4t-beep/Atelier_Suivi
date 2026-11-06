@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ChevronLeft, ChevronRight, Wallet } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
-import { ListSkeleton } from "@/components/ui/skeleton";
-import { buttonClasses } from "@/components/ui/button";
+import { PageSkeleton } from "@/components/ui/skeleton";
+import { buttonClasses, iconButtonClasses } from "@/components/ui/button";
 import { getUserContext } from "@/lib/dal";
 import { formatLongDay, plural, todayInTimezone } from "@/lib/format";
 import { countPendingLines, loadDoneLookup, loadLinesForDay, loadTasks } from "@/lib/queries";
@@ -20,7 +20,7 @@ const HISTORY_DAYS = 120;
 
 export default function TodayPage({ searchParams }: PageProps<"/aujourdhui">) {
   return (
-    <Suspense fallback={<ListSkeleton rows={4} />}>
+    <Suspense fallback={<PageSkeleton rows={4} />}>
       {searchParams.then(({ jour }) => (
         <TodayContent requested={typeof jour === "string" ? jour : undefined} />
       ))}
@@ -94,7 +94,7 @@ async function TodayContent({ requested }: { requested?: string }) {
   else rest = `Reste : ${left.slice(0, 3).join(", ")}${left.length > 3 ? ` et ${plural(left.length - 3, "autre")}` : ""}.`;
 
   const progress = total ? doneCount / total : 0;
-  const circumference = 2 * Math.PI * 34;
+  const circumference = 2 * Math.PI * 7;
 
   return (
     <>
@@ -102,54 +102,52 @@ async function TodayContent({ requested }: { requested?: string }) {
         eyebrow={eyebrow}
         title={formatLongDay(day)}
         action={
-          <nav aria-label="Changer de jour" className="flex items-center gap-2">
-            <DayLink day={addDays(day, -1)} today={today} label="Jour précédent">
-              <ChevronLeft className="size-5" aria-hidden />
-            </DayLink>
+          <nav aria-label="Changer de jour" className="-mr-2 flex items-center gap-0.5 lg:-mr-1.5">
             {!isToday && (
-              <Link href="/aujourdhui" className={buttonClasses("soft", "md")}>
+              <Link href="/aujourdhui" className={buttonClasses("soft", "sm", "mr-1")}>
                 Aujourd&apos;hui
               </Link>
             )}
+            <DayLink day={addDays(day, -1)} today={today} label="Jour précédent">
+              <ChevronLeft className="size-4" aria-hidden />
+            </DayLink>
             <DayLink day={addDays(day, 1)} today={today} label="Jour suivant">
-              <ChevronRight className="size-5" aria-hidden />
+              <ChevronRight className="size-4" aria-hidden />
             </DayLink>
           </nav>
         }
       />
 
-      <section className="neon-panel mb-5 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-4 rounded-[1.75rem] border border-edge bg-surface p-5 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
-        <div className="relative size-21" role="img" aria-label={`${doneCount} tâches faites sur ${total}`}>
-          <svg viewBox="0 0 84 84" className="size-21 -rotate-90" aria-hidden>
-            <circle cx="42" cy="42" r="34" fill="none" strokeWidth="8" className="stroke-accent-soft" />
+      <section aria-label="Avancement du jour" className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line px-5 py-3">
+        <div className="flex min-w-0 flex-[1_1_18rem] items-start gap-3">
+          <svg viewBox="0 0 18 18" className="mt-px size-[18px] shrink-0 -rotate-90" role="img" aria-label={`${doneCount} tâches faites sur ${total}`}>
+            <circle cx="9" cy="9" r="7" fill="none" strokeWidth="2.25" className="stroke-edge-soft" />
             <circle
-              cx="42"
-              cy="42"
-              r="34"
+              cx="9"
+              cy="9"
+              r="7"
               fill="none"
-              strokeWidth="8"
+              strokeWidth="2.25"
               strokeLinecap="round"
-              className="stroke-accent transition-[stroke-dashoffset] duration-500 [filter:drop-shadow(0_0_5px_var(--atelier-signature))]"
-              strokeDasharray={circumference.toFixed(1)}
-              strokeDashoffset={(circumference * (1 - progress)).toFixed(1)}
+              className="stroke-accent transition-[stroke-dashoffset] duration-500 ease-out"
+              strokeDasharray={circumference.toFixed(2)}
+              strokeDashoffset={(circumference * (1 - progress)).toFixed(2)}
             />
           </svg>
-          <span className="neon-title absolute inset-0 grid place-items-center font-mono text-[1.05rem] font-semibold text-accent-strong tabular-nums">
-            {Math.round(progress * 100)}%
-          </span>
-        </div>
-        <div className="min-w-0">
-          <p className="font-display text-xl font-extrabold text-ink">
-            {doneCount} sur {plural(total, "tâche")}
+          <p className="min-w-0">
+            <span className="font-semibold text-ink tabular-nums">
+              {doneCount} sur {plural(total, "tâche")}
+            </span>
+            <span className="ml-2 text-faint tabular-nums">{Math.round(progress * 100)} %</span>
+            <span className="mt-0.5 block text-muted lg:mt-0 lg:ml-3 lg:inline">{rest}</span>
           </p>
-          <p className="mt-0.5 text-sm text-ink-soft">{rest}</p>
         </div>
         {pending > 0 && (
           <Link
             href="/tresorerie"
-            className="col-span-full inline-flex min-h-11 items-center gap-2 justify-self-start rounded-full border border-treso bg-treso-soft px-4 text-sm font-semibold text-treso sm:col-span-1"
+            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-treso/35 px-2.5 font-medium text-treso tabular-nums transition-colors hover:bg-treso-soft lg:h-[26px] lg:px-2 lg:text-small"
           >
-            <Wallet className="size-4" aria-hidden />
+            <Wallet className="size-4 lg:size-3.5" aria-hidden />
             {plural(pending, "ligne")} pour Trésorerie
           </Link>
         )}
@@ -167,7 +165,7 @@ function DayLink({ day, today, label, children }: { day: string; today: string; 
     <Link
       href={day === today ? "/aujourdhui" : `/aujourdhui?jour=${day}`}
       aria-label={label}
-      className="grid size-11 place-items-center rounded-full border border-edge-soft bg-surface text-ink-soft transition-colors hover:border-accent hover:text-accent-strong"
+      className={iconButtonClasses()}
     >
       {children}
     </Link>

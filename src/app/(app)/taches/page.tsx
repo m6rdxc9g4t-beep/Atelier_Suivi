@@ -24,7 +24,6 @@ export default function TasksPage({ searchParams }: PageProps<"/taches">) {
   return (
     <>
       <PageHeader
-        eyebrow="Toutes tes tâches"
         title="Tâches et rappels"
         intro="Ponctuelles ou récurrentes. Lie une tâche à Trésorerie : en la cochant, une ligne de dépense est préparée."
       />
@@ -69,25 +68,25 @@ async function TasksContent({ openForm, filter }: { openForm: boolean; filter: s
         </EmptyState>
       ) : (
         <>
-          <nav aria-label="Filtrer les tâches" className="mb-4 flex flex-wrap gap-2">
+          <nav aria-label="Filtrer les tâches" className="flex gap-1.5 overflow-x-auto border-b border-line px-5 py-2.5 [scrollbar-width:none] lg:flex-wrap">
             {filters.map((f) => (
               <Link
                 key={f.value}
                 href={f.value === "toutes" ? "/taches" : `/taches?categorie=${f.value}`}
                 aria-current={filter === f.value ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
-                  filter === f.value ? "border-edge bg-accent-soft text-accent-strong neon-panel" : "border-edge-soft bg-surface text-ink-soft hover:text-ink",
+                  "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border px-3 font-medium whitespace-nowrap transition-colors lg:h-[26px] lg:px-2 lg:text-small",
+                  filter === f.value ? "border-edge-soft bg-selected text-ink" : "border-transparent text-muted hover:bg-sunken hover:text-ink",
                 )}
               >
                 {f.color && <span className="size-2 rounded-full" style={{ background: f.color }} aria-hidden />}
-                {f.label}
+                <span className="tabular-nums">{f.label}</span>
               </Link>
             ))}
           </nav>
 
           {visible.length ? (
-            <ul className="neon-panel divide-y divide-line rounded-[1.5rem] border border-edge bg-surface">
+            <ul>
               {visible.map((t) => (
                 <TaskRowItem key={t.id} task={t} />
               ))}
@@ -106,22 +105,30 @@ function TaskRowItem({ task }: { task: TaskRow }) {
   const amount = task.finance_amount_cents ? (task.finance_kind === "recette" ? task.finance_amount_cents : -task.finance_amount_cents) : null;
   return (
     <li>
-      <Link href={`/taches/${task.id}`} className="flex min-h-16 items-center gap-3 rounded-[1.5rem] px-4 py-3 transition-colors hover:bg-accent-faint">
-        <span className="size-3 shrink-0 rounded-[4px]" style={{ background: category.color }} aria-hidden />
-        <span className="min-w-0 flex-1">
-          <span className={cn("block font-semibold break-words text-ink", task.paused && "text-ink-soft")}>{task.title}</span>
-          <span className="mt-0.5 flex flex-wrap gap-x-3 text-[0.8rem] text-ink-soft">
+      <Link
+        href={`/taches/${task.id}`}
+        className={cn(
+          "grid min-h-13 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 border-b border-line px-5 py-2 transition-colors hover:bg-sunken lg:min-h-10 lg:py-1.5",
+          task.paused && "text-muted",
+        )}
+      >
+        <span className="size-2 rounded-full" style={{ background: category.color }} aria-hidden />
+        <span className="min-w-0 lg:flex lg:items-baseline lg:gap-3">
+          <span className={cn("block font-medium break-words text-ink", task.paused && "text-muted")}>{task.title}</span>
+          <span className="mt-0.5 flex flex-wrap gap-x-2.5 text-small text-muted lg:mt-0">
             <span>{recurrenceLabel(task)}</span>
             <span>{momentOf(task.moment).label}</span>
-            {task.paused && <span className="eyebrow text-[0.65rem]">En pause</span>}
+            {task.paused && <span className="rounded-xs border border-edge-soft px-1 text-meta">En pause</span>}
             {task.done_on && <span>Faite le {shortDay(task.done_on)}</span>}
           </span>
         </span>
-        {task.finance_enabled && (
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-treso-soft px-2.5 py-1 font-mono text-[0.8rem] font-semibold text-treso">
+        {task.finance_enabled ? (
+          <span className="inline-flex h-6 items-center gap-1 rounded-sm bg-treso-soft px-1.5 text-small font-medium whitespace-nowrap text-treso tabular-nums">
             <ArrowRight className="size-3.5" aria-hidden />
             {task.finance_ask || amount === null ? "Trésorerie" : formatSignedCents(amount)}
           </span>
+        ) : (
+          <span aria-hidden />
         )}
       </Link>
     </li>

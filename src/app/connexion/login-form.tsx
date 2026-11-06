@@ -28,10 +28,12 @@ export function LoginForm() {
     const email = linkState.values?.email ?? codeState.values?.email ?? "";
     return (
       <form key="code" action={codeAction} className="flex flex-col gap-4" noValidate>
-        <div className="rounded-[1.75rem] bg-accent-soft p-6 text-ink">
-          <Mail className="size-6 text-accent-strong" aria-hidden />
-          <p className="mt-3 font-display text-xl font-extrabold">Regarde ta boîte mail</p>
-          <p className="mt-1 text-sm text-ink-soft">{linkState.message}</p>
+        <div className="flex gap-3 rounded-lg border border-edge bg-surface p-4 text-ink">
+          <Mail className="mt-0.5 size-4 shrink-0 text-accent-strong" aria-hidden />
+          <div>
+            <p className="font-semibold">Regarde ta boîte mail</p>
+            <p className="mt-0.5 text-muted">{linkState.message}</p>
+          </div>
         </div>
         <input type="hidden" name="email" value={email} />
         <input type="hidden" name="next" value={linkState.values?.next ?? next} />
@@ -45,12 +47,12 @@ export function LoginForm() {
             maxLength={10}
             placeholder="123456"
             required
-            className="text-center font-mono text-lg tracking-[0.3em]"
+            className="text-center text-title! font-medium tracking-[0.3em] tabular-nums"
             invalid={Boolean(codeState.fieldErrors?.code)}
           />
         </Field>
         <FormMessage state={codeState} />
-        <SubmitButton pendingLabel="Vérification…">Valider le code</SubmitButton>
+        <SubmitButton className="lg:h-[38px]!" pendingLabel="Vérification…">Valider le code</SubmitButton>
         <SwitchLink onClick={() => setMode("password")}>Revenir à la connexion</SwitchLink>
       </form>
     );
@@ -60,10 +62,12 @@ export function LoginForm() {
   if (sentState?.status === "success") {
     return (
       <div className="flex flex-col gap-4">
-        <div className="rounded-[1.75rem] bg-accent-soft p-6 text-ink">
-          <Mail className="size-6 text-accent-strong" aria-hidden />
-          <p className="mt-3 font-display text-xl font-extrabold">Regarde ta boîte mail</p>
-          <p className="mt-1 text-sm text-ink-soft">{sentState.message}</p>
+        <div className="flex gap-3 rounded-lg border border-edge bg-surface p-4 text-ink">
+          <Mail className="mt-0.5 size-4 shrink-0 text-accent-strong" aria-hidden />
+          <div>
+            <p className="font-semibold">Regarde ta boîte mail</p>
+            <p className="mt-0.5 text-muted">{sentState.message}</p>
+          </div>
         </div>
         {mode === "signup" && <SwitchLink onClick={() => setMode("password")}>Revenir à la connexion</SwitchLink>}
       </div>
@@ -91,7 +95,7 @@ export function LoginForm() {
         <input type="hidden" name="next" value={next} />
         {emailField(linkState)}
         <FormMessage state={linkState} />
-        <SubmitButton pendingLabel="Envoi du code…">Recevoir un code de connexion</SubmitButton>
+        <SubmitButton className="lg:h-[38px]!" pendingLabel="Envoi du code…">Recevoir un code de connexion</SubmitButton>
         <SwitchLink onClick={() => setMode("password")}>Me connecter avec mon mot de passe</SwitchLink>
       </form>
     );
@@ -100,7 +104,7 @@ export function LoginForm() {
   if (mode === "signup") {
     return (
       <form key="signup" action={signUpAction} className="flex flex-col gap-4" noValidate>
-        <h2 className="font-display text-2xl font-extrabold text-ink">Créer un compte</h2>
+        <h2 className="text-title font-semibold text-ink">Créer un compte</h2>
         <input type="hidden" name="next" value={next} />
         {emailField(signUpState)}
         <Field label="Choisis un mot de passe" name="password" hint="8 caractères minimum" errors={signUpState.fieldErrors?.password}>
@@ -117,7 +121,7 @@ export function LoginForm() {
           <Input name="confirm" type="password" autoComplete="new-password" required invalid={Boolean(signUpState.fieldErrors?.confirm)} />
         </Field>
         <FormMessage state={signUpState} />
-        <SubmitButton pendingLabel="Création du compte…">Créer mon compte</SubmitButton>
+        <SubmitButton className="lg:h-[38px]!" pendingLabel="Création du compte…">Créer mon compte</SubmitButton>
         <SwitchLink onClick={() => setMode("password")}>J&apos;ai déjà un compte</SwitchLink>
       </form>
     );
@@ -140,7 +144,7 @@ export function LoginForm() {
         />
       </Field>
       <FormMessage state={passwordState} />
-      <SubmitButton pendingLabel="Connexion…">Se connecter</SubmitButton>
+      <SubmitButton className="lg:h-[38px]!" pendingLabel="Connexion…">Se connecter</SubmitButton>
       <div className="-my-1 flex flex-col">
         <SwitchLink onClick={() => setMode("signup")}>Pas encore de compte ? Créer un compte</SwitchLink>
         <SwitchLink onClick={() => setMode("link")}>Mot de passe oublié ? Recevoir un code par e-mail</SwitchLink>
@@ -154,7 +158,7 @@ function SwitchLink({ onClick, children }: { onClick: () => void; children: Reac
     <button
       type="button"
       onClick={onClick}
-      className="min-h-11 self-center text-sm text-ink-soft underline-offset-4 hover:text-ink hover:underline"
+      className="min-h-11 self-center text-muted underline-offset-4 hover:text-ink hover:underline lg:min-h-8"
     >
       {children}
     </button>

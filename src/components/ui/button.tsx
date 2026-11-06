@@ -4,15 +4,27 @@ import type { ButtonHTMLAttributes } from "react";
 export type ButtonVariant = "primary" | "soft" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md";
 
+/**
+ * Boutons de la suite : 30 px sur ordinateur (26 px en petit), zone tactile ≥ 40 px sur téléphone.
+ * primary : plein, dans la signature (un par écran) · soft : neutre bordé · ghost : sans fond · danger : texte rouge.
+ */
 export function buttonClasses(variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) {
   return cn(
-    "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors",
-    "disabled:cursor-not-allowed disabled:opacity-60",
-    size === "md" ? "h-11 px-5 text-[0.95rem]" : "h-9 px-3.5 text-sm",
-    variant === "primary" && "atelier-btn-primary hover:brightness-110",
-    variant === "soft" && "border border-edge-soft bg-accent-faint text-ink hover:bg-accent-soft",
-    variant === "ghost" && "text-ink-soft hover:bg-accent-faint hover:text-ink",
-    variant === "danger" && "text-bad hover:bg-bad-soft",
+    "inline-flex shrink-0 items-center justify-center gap-2 rounded-md border font-medium whitespace-nowrap transition-colors",
+    "disabled:cursor-not-allowed disabled:opacity-50",
+    size === "md" ? "h-10 px-4 text-ui lg:h-[30px] lg:px-3" : "h-9 px-3 text-small lg:h-[26px] lg:px-2",
+    variant === "primary" && "border-transparent bg-accent text-accent-ink hover:bg-accent-hover",
+    variant === "soft" && "border-edge-soft bg-surface text-ink hover:bg-sunken active:bg-selected",
+    variant === "ghost" && "border-transparent text-muted hover:bg-sunken hover:text-ink",
+    variant === "danger" && "border-transparent text-bad hover:bg-bad-soft",
+    className,
+  );
+}
+
+/** Bouton carré d'icône (navigation de jour, fermeture) : 30 px sur ordinateur, 40 px au doigt */
+export function iconButtonClasses(className?: string) {
+  return cn(
+    "grid size-10 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-sunken hover:text-ink lg:size-[30px]",
     className,
   );
 }

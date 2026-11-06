@@ -1,18 +1,18 @@
 import type { MetadataRoute } from "next";
 
-/** Rend l'app installable : Dock du Mac (Safari), logo complet. L'iPhone reçoit public/icons/manifest-iphone.webmanifest (proxy). */
+/** Rend l'app installable : Dock du Mac (Safari), icône carrée de Suivi. L'iPhone reçoit public/icons/manifest-iphone.webmanifest (proxy). */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "atelier_Suivi",
+    name: "Atelier Suivi",
     short_name: "Suivi",
-    description: "Tes journées cochées : rappels, habitudes et dépenses envoyées à atelier_Trésorerie.",
+    description: "Tes journées cochées : rappels, habitudes et dépenses envoyées à Atelier Trésorerie.",
     lang: "fr",
     start_url: "/aujourdhui",
     scope: "/",
     display: "standalone",
-    background_color: "#071012",
-    theme_color: "#071012",
+    background_color: "#fbfbfc",
+    theme_color: "#fbfbfc",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

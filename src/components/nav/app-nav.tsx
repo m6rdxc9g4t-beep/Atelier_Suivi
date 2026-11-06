@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
+import { ThemePicker } from "@/components/theme/theme-picker";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS, SETTINGS_ITEM, type NavItem } from "./nav-items";
 
@@ -27,15 +28,18 @@ function withPathname(View: (props: { pathname: string }) => React.ReactNode) {
   };
 }
 
-/** Navigation latérale (écrans larges) */
+/** Navigation latérale (écrans larges) : entrées de 30 px, l'entrée courante sur fond neutre */
 export const SideNav = withPathname(function SideNavView({ pathname }) {
   return (
-    <nav aria-label="Navigation principale" className="flex flex-1 flex-col gap-1">
+    <nav aria-label="Navigation principale" className="flex flex-1 flex-col gap-px">
       {NAV_ITEMS.map((item) => (
         <SideLink key={item.href} item={item} active={isActive(pathname, item.href)} />
       ))}
-      <div className="mt-auto">
+      <div className="mt-auto flex flex-col gap-2">
         <SideLink item={SETTINGS_ITEM} active={isActive(pathname, SETTINGS_ITEM.href)} />
+        <div className="px-1 pb-1">
+          <ThemePicker compact />
+        </div>
       </div>
     </nav>
   );
@@ -48,22 +52,22 @@ function SideLink({ item, active }: { item: NavItem; active: boolean }) {
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-xl px-4 py-2.5 text-[0.95rem] transition-colors",
-        active ? "atelier-nav-active font-semibold" : "text-ink-soft hover:bg-accent-faint hover:text-ink",
+        "flex h-[30px] items-center gap-2.5 rounded-md px-2 font-medium transition-colors",
+        active ? "bg-selected text-ink" : "text-ink-2 hover:bg-sunken hover:text-ink",
       )}
     >
-      <Icon className={cn("size-[1.15rem]", active && "text-accent-strong")} aria-hidden strokeWidth={active ? 2.2 : 1.8} />
+      <Icon className={cn("size-4", active ? "text-ink" : "text-faint")} aria-hidden strokeWidth={1.75} />
       {item.label}
     </Link>
   );
 }
 
-/** Barre d'onglets du bas (mobile) */
+/** Barre d'onglets du bas (téléphone) : à portée de pouce, onglet courant sur pastille neutre */
 export const BottomNav = withPathname(function BottomNavView({ pathname }) {
   return (
     <nav
       aria-label="Navigation principale"
-      className="neon-panel fixed inset-x-0 bottom-0 z-30 border-t border-edge bg-sidebar/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-sidebar/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-4">
         {NAV_ITEMS.map((item) => {
@@ -75,11 +79,13 @@ export const BottomNav = withPathname(function BottomNavView({ pathname }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 min-h-14 justify-center py-2 text-[0.72rem]",
-                  active ? "font-semibold text-accent-strong" : "text-ink-soft",
+                  "flex min-h-14 flex-col items-center justify-center gap-1 pt-1.5 pb-1 text-meta font-medium",
+                  active ? "text-ink" : "text-muted",
                 )}
               >
-                <Icon className="size-5" aria-hidden strokeWidth={active ? 2.2 : 1.8} />
+                <span className={cn("grid h-7 w-12 place-items-center rounded-full transition-colors", active && "bg-selected")}>
+                  <Icon className="size-5" aria-hidden strokeWidth={active ? 2 : 1.75} />
+                </span>
                 {item.short}
               </Link>
             </li>
@@ -99,9 +105,9 @@ export const MobileSettingsLink = withPathname(function MobileSettingsLinkView({
       href={SETTINGS_ITEM.href}
       aria-label={SETTINGS_ITEM.label}
       aria-current={active ? "page" : undefined}
-      className={cn("grid size-10 place-items-center rounded-full", active ? "bg-accent-soft text-accent-strong" : "text-ink-soft hover:bg-accent-faint")}
+      className={cn("grid size-11 place-items-center rounded-md", active ? "bg-selected text-ink" : "text-muted hover:bg-sunken hover:text-ink")}
     >
-      <Icon className="size-5" aria-hidden />
+      <Icon className="size-5" aria-hidden strokeWidth={1.75} />
     </Link>
   );
 });
