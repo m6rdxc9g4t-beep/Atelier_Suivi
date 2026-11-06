@@ -4,7 +4,7 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 /** Champ de la suite : 36 px sur ordinateur (44 px au doigt), bord 1 px, focus = bord accent + voile de 3 px */
 const control =
   "w-full rounded-md border border-edge-soft bg-field px-3 text-input text-ink " +
-  "transition-[border-color,box-shadow] hover:border-faint focus:border-accent focus:outline-none focus-visible:outline-none focus:focus-ring " +
+  "transition-[border-color,box-shadow] hover:border-faint focus:border-accent-line focus:outline-none focus-visible:outline-none focus:focus-ring " +
   "aria-[invalid=true]:border-bad disabled:opacity-50";
 
 type FieldProps = {

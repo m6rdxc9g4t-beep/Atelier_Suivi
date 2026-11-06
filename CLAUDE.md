@@ -31,10 +31,11 @@ envoyée à Trésorerie par le script du Mac (ou exportée en CSV). Même pile e
 
 ## Design
 Charte Atelier v2 « Linear » (règles : `Atelier_Deploy/DESIGN.md`, `Atelier_Projets/docs/SUITE.md` §1) : plate au repos,
-traits de 1 px, police Inter ; palette du foyer (Dates, Suivi, Cuisine, §3 bis du kit) : **crème** en clair, **bleu nuit** en
-sombre (fonds fixes hors CSS : `#f8f4ec` / `#0b1220`). La signature de Suivi, le **lilas #8a5fb8**
-(`--atelier-sig-suivi`, activée par `data-atelier-app="suivi"` sur `<html>`), ne sert qu'à l'accent : bouton principal, case
-cochée, sélection, focus, liens, barres d'une seule mesure. Pas de halo, de lueur, de grille de fond, de `text-shadow`, de barre de
+traits de 1 px, police Inter ; couleurs d'avant la v2 (§3 bis du kit, comme Dates et Cuisine) : toute la structure (fond,
+barre latérale, surfaces, texte, traits) est teintée du **cyan #15aabf** de Suivi, en clair comme en sombre (fonds fixes hors
+CSS : `#f2f7fa` / `#0a0e12`). La signature pleine (`--atelier-sig-suivi`, activée par `data-atelier-app="suivi"` sur `<html>`)
+ne sert qu'à l'accent : bouton principal (texte quasi noir `#0b0b0f`), case cochée, sélection, focus, liens, barres d'une seule
+mesure ; en trait fin (focus, anneau, pointillés), `accent-line` (cyan foncé d'un cran en clair, ≥ 3:1). Pas de halo, de lueur, de grille de fond, de `text-shadow`, de barre de
 couleur sur le côté, ni de surtitre au-dessus des titres.
 `src/styles/atelier-brand/` est une copie exacte du kit (source : Atelier_Projets/design-system/brand/ : `atelier-brand.css`,
 `atelier-theme.js`, Inter + licence) : ne jamais la modifier ici (ignorée par ESLint).
@@ -50,11 +51,12 @@ Icônes : sources `docs/brand/icone-suivi.svg` (carré arrondi : PWA, app Mac) e
 iPhone / autres appareils reste servie par `src/proxy.ts` et `src/components/theme/iphone-icons.tsx`. Favicon : `src/app/icon.svg`.
 Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-sidebar`, `bg-surface`, `bg-sunken` (survol), `bg-selected` (courant), `text-ink`,
 `text-ink-2`, `text-muted`, `text-faint`, `border-edge`, `border-edge-soft`, `border-line`, `bg-accent` / `text-accent-ink`,
-`bg-accent-soft`, `text-accent-strong`, `shadow-pop` (seulement ce qui flotte), `focus-ring`. Tailles : `text-meta`, `text-small`,
+`bg-accent-soft`, `text-accent-strong`, `border-accent-line` / `outline-accent-line` / `stroke-accent-line`, `shadow-pop` (seulement ce qui flotte), `focus-ring`. Tailles : `text-meta`, `text-small`,
 `text-ui` (13 px sur ordinateur, 15 px sur téléphone), `text-strong`, `text-title`, `text-page`, `text-input` (16 px sur téléphone :
 pas de zoom iOS). Rayons `rounded-xs|sm|md|lg` = 4 / 5 / 7 / 10 px. Chiffres en `tabular-nums` (pas de police mono hors code).
-Couleurs qui portent un sens, jamais la signature ni du lilas : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu de
-Trésorerie, pour tout ce qui part vers elle) ; texte ≥ 4,5:1 et pastilles ≥ 3:1 sur le crème comme sur le bleu nuit. Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une
+Couleurs qui portent un sens, jamais cyan ni sarcelle : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu roi de
+Trésorerie, pour tout ce qui part vers elle, distinct de toute catégorie : Achats est verte) ; texte ≥ 4,5:1 et pastilles ≥ 3:1 sur
+les fonds teintés, clairs comme sombres. Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une
 classe de `buttonClasses()`, passer par une variante (`max-sm:`, `max-lg:`) ou le suffixe `!`.
 Sur téléphone, la barre d'onglets est fixe : le `main` garde une marge basse
 (`pb-[calc(7.5rem+env(safe-area-inset-bottom))]`) pour que rien ne passe dessous ; aucun `backdrop-filter` sur un

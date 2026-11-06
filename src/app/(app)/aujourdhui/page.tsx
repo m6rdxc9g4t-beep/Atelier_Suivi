@@ -129,7 +129,7 @@ async function TodayContent({ requested }: { requested?: string }) {
               fill="none"
               strokeWidth="2.25"
               strokeLinecap="round"
-              className="stroke-accent transition-[stroke-dashoffset] duration-500 ease-out"
+              className="stroke-accent-line transition-[stroke-dashoffset] duration-500 ease-out"
               strokeDasharray={circumference.toFixed(2)}
               strokeDashoffset={(circumference * (1 - progress)).toFixed(2)}
             />
