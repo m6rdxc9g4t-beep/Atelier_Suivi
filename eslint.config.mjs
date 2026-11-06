@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Copie verbatim du kit de la suite (Atelier_Projets/design-system/brand/) : jamais modifiée ici
+    "src/styles/atelier-brand/**",
   ]),
 ]);
 

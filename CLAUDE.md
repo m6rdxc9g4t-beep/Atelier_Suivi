@@ -30,23 +30,34 @@ envoyée à Trésorerie par le script du Mac (ou exportée en CSV). Même pile e
   relevés de Trésorerie (Date ; Libellé ; Montant ; Catégorie).
 
 ## Design
-Charte Atelier « néon monochrome » : toute l'app dans sa couleur signature, le **cyan #15AABF**
-(`--atelier-sig-suivi` du kit, activée par `data-atelier-app="suivi"` sur `<html>`).
-`src/styles/atelier-brand/atelier-brand.css` est une copie exacte du kit (source : Atelier_Projets/design-system/brand/) :
-ne jamais la modifier ici.
-Logo complet : `public/brand/logo-atelier-suivi.png` (aussi dans le kit, `logos/suivi.png`). Icônes : le logo complet pour
-l'app web hors iPhone (`public/icons/icon-*.png`, `apple-icon-main.png`) et pour l'app Mac (`mac/`) ; l'iPhone garde
-l'onde dans un cadre néon chromé, comme Cuisine (source `docs/brand/icone-iphone.svg`, PNG par
-`node scripts/icones-iphone.mjs` : `apple-icon-iphone.png`, `iphone-*.png` ; `manifest-iphone.webmanifest`), servie par `src/proxy.ts` et
-`src/components/theme/iphone-icons.tsx`, comme Atelier Dates. Favicon : `src/app/icon.svg`.
-Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-surface`, `bg-sunken`, `text-ink`,
-`text-ink-soft`, `border-edge`, `border-edge-soft`, `divide-line`, `bg-accent` / `text-accent-ink`, `bg-accent-soft`,
-`text-accent-strong`, `neon-panel`, `glow-accent`, `neon-title`, `eyebrow`. Couleurs qui portent un sens, jamais la
-signature : `good` / `bad`, `cat-*` (catégories) et `treso` (bleu roi de Trésorerie, pour tout ce qui part vers elle).
-Polices : `font-display` (Nunito du kit, titres), `font-sans` (Nunito Sans), `font-mono` (JetBrains Mono, chiffres).
-Pas de couleurs ni d'ombres en dur. Sur téléphone, la barre d'onglets est fixe : le `main` garde une marge basse
+Charte Atelier v2 « Linear » (règles : `Atelier_Deploy/DESIGN.md`, `Atelier_Projets/docs/SUITE.md` §1) : structure neutre
+commune en gris froids, clair et sombre, plate au repos, traits de 1 px, police Inter. La signature de Suivi, le **cyan #008295**
+(`--atelier-sig-suivi`, activée par `data-atelier-app="suivi"` sur `<html>`), ne sert qu'à l'accent : bouton principal, case
+cochée, sélection, focus, liens, barres d'une seule mesure. Pas de halo, de lueur, de grille de fond, de `text-shadow`, de barre de
+couleur sur le côté, ni de surtitre au-dessus des titres.
+`src/styles/atelier-brand/` est une copie exacte du kit (source : Atelier_Projets/design-system/brand/ : `atelier-brand.css`,
+`atelier-theme.js`, Inter + licence) : ne jamais la modifier ici (ignorée par ESLint).
+Thème : `atelier-theme.js` est lu comme texte (règle Turbopack de `next.config.ts`) et posé en ligne dans `<head>` par
+`src/components/theme/theme-script.tsx` ; préférence commune de la suite (Système / Clair / Sombre) par
+`window.atelierTheme.set()`, cookie `atelier_theme` sur le VPS, sinon `localStorage["atelier:theme"]` ; pose `class="dark"` et
+`data-theme`. L'ancienne clé `atelier-suivi-theme` est reprise une fois puis effacée.
+Coquille comme le portail : barre latérale de 232 px (marque, navigation, thème en pied), barre haute de 44 px posée par
+`PageHeader` (contexte / titre, actions), listes en lignes de 40 px séparées d'un filet, en-têtes de groupe `GroupHeader`.
+Marque : `.atelier-brand__tile` avec l'icône Lucide `list-checks`, « Atelier Suivi ».
+Icônes : sources `docs/brand/icone-suivi.svg` (carré arrondi : PWA, app Mac) et `docs/brand/icone-suivi-plein-cadre.svg`
+(écran d'accueil iPhone / Mac, « maskable ») ; PNG et `mac/AppIcon.icns` par `node scripts/icones.mjs` (sharp). La distinction
+iPhone / autres appareils reste servie par `src/proxy.ts` et `src/components/theme/iphone-icons.tsx`. Favicon : `src/app/icon.svg`.
+Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-sidebar`, `bg-surface`, `bg-sunken` (survol), `bg-selected` (courant), `text-ink`,
+`text-ink-2`, `text-muted`, `text-faint`, `border-edge`, `border-edge-soft`, `border-line`, `bg-accent` / `text-accent-ink`,
+`bg-accent-soft`, `text-accent-strong`, `shadow-pop` (seulement ce qui flotte), `focus-ring`. Tailles : `text-meta`, `text-small`,
+`text-ui` (13 px sur ordinateur, 15 px sur téléphone), `text-strong`, `text-title`, `text-page`, `text-input` (16 px sur téléphone :
+pas de zoom iOS). Rayons `rounded-xs|sm|md|lg` = 4 / 5 / 7 / 10 px. Chiffres en `tabular-nums` (pas de police mono hors code).
+Couleurs qui portent un sens, jamais la signature : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu de Trésorerie,
+pour tout ce qui part vers elle). Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une
+classe de `buttonClasses()`, passer par une variante (`max-sm:`, `max-lg:`) ou le suffixe `!`.
+Sur téléphone, la barre d'onglets est fixe : le `main` garde une marge basse
 (`pb-[calc(7.5rem+env(safe-area-inset-bottom))]`) pour que rien ne passe dessous ; aucun `backdrop-filter` sur un
-ancêtre d'un élément `fixed`. Zones tactiles ≥ 44 px. Textes en français, tutoiement.
+ancêtre d'un élément `fixed`. Zones tactiles ≥ 44 px (contrôles denses sur ordinateur à partir de `lg:`). Textes en français, tutoiement.
 
 ## Commandes utiles
 - `npm run local` — version locale complète sur le Mac (Supabase dans Docker, ports 54421…, app sur 3030)

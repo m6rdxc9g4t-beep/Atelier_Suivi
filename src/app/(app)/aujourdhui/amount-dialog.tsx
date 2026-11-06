@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import { Wallet, X } from "lucide-react";
+import { iconButtonClasses } from "@/components/ui/button";
+import { segment, segmented } from "@/components/ui/segmented";
 import { Field, Input, Select } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -46,26 +48,24 @@ export function AmountDialog({ target, onClose, onDone }: { target: AmountTarget
         if (e.target === dialog.current) dialog.current?.close();
       }}
       aria-labelledby="amount-title"
-      className="neon-panel-strong m-auto w-[min(32rem,calc(100vw-1.5rem))] max-w-none rounded-[1.75rem] border border-edge bg-surface p-0 text-ink backdrop:bg-black/50 backdrop:backdrop-blur-sm max-sm:mb-0 max-sm:w-full max-sm:rounded-b-none"
+      className="m-auto w-[min(30rem,calc(100vw-1.5rem))] max-w-none rounded-lg border border-edge bg-surface p-0 text-ink shadow-pop backdrop:bg-[rgb(10_11_13/0.45)] max-sm:mb-0 max-sm:w-full max-sm:rounded-b-none"
     >
-      <form action={action} className="flex flex-col gap-4 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6" noValidate>
+      <form action={action} className="flex flex-col gap-4 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]" noValidate>
         <div className="flex items-start gap-3">
+          <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-treso-soft text-treso" aria-hidden>
+            <Wallet className="size-4" />
+          </span>
           <div className="min-w-0 flex-1">
-            <p className="eyebrow text-treso">Lien atelier_Trésorerie</p>
-            <h2 id="amount-title" className="mt-1 font-display text-xl font-extrabold break-words">
+            <h2 id="amount-title" className="text-title font-semibold break-words">
               {target.title}
             </h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              Indique le montant réel : une ligne datée du {formatLongDay(target.day)} sera prête à envoyer.
+            <p className="mt-0.5 text-muted">
+              <span className="font-medium text-treso">Lien Atelier Trésorerie</span> · Indique le montant réel : une ligne datée du{" "}
+              {formatLongDay(target.day)} sera prête à envoyer.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => dialog.current?.close()}
-            aria-label="Fermer"
-            className="grid size-11 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-accent-faint hover:text-ink"
-          >
-            <X className="size-5" aria-hidden />
+          <button type="button" onClick={() => dialog.current?.close()} aria-label="Fermer" className={iconButtonClasses("-mt-1 -mr-2")}>
+            <X className="size-4" aria-hidden />
           </button>
         </div>
 
@@ -81,15 +81,15 @@ export function AmountDialog({ target, onClose, onDone }: { target: AmountTarget
               placeholder="0,00"
               defaultValue={state.values?.amount ?? centsToInput(finance.amountCents)}
               invalid={Boolean(state.fieldErrors?.amount)}
-              className="font-mono text-lg"
+              className="text-title! font-medium tabular-nums"
               autoFocus
             />
           </Field>
           <fieldset className="flex flex-col gap-1.5">
-            <legend className="mb-1.5 text-sm font-medium text-ink">Sens</legend>
-            <div className="flex gap-2">
+            <legend className="mb-1.5 font-medium text-ink-2">Sens</legend>
+            <div className={segmented}>
               {MONEY_KINDS.map((k) => (
-                <label key={k.value} className="flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border border-edge-soft px-3 text-sm font-semibold text-ink-soft has-checked:border-treso has-checked:bg-treso-soft has-checked:text-treso">
+                <label key={k.value} className={segment}>
                   <input type="radio" name="kind" value={k.value} defaultChecked={(state.values?.kind ?? finance.kind) === k.value} className="sr-only" />
                   {k.label}
                 </label>
@@ -117,7 +117,7 @@ export function AmountDialog({ target, onClose, onDone }: { target: AmountTarget
 
         <FormMessage state={state.status === "error" && !state.fieldErrors ? state : { status: "idle" }} />
 
-        <div className="flex flex-wrap justify-end gap-2 border-t border-line pt-4">
+        <div className="-mx-5 flex flex-wrap justify-end gap-2 border-t border-line px-5 pt-4">
           <SubmitButton name="with_line" value="false" variant="ghost" className="mr-auto">
             Cocher sans ligne
           </SubmitButton>

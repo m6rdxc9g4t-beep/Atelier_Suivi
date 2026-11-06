@@ -28,8 +28,8 @@ const dateTime = new Intl.DateTimeFormat("fr-FR", {
 export default function SettingsPage() {
   return (
     <>
-      <PageHeader eyebrow="Réglages" title="Paramètres" />
-      <div className="flex flex-col gap-5">
+      <PageHeader title="Paramètres" />
+      <div className="flex max-w-2xl flex-col gap-4 px-5 py-5">
         <Panel>
           <SectionTitle>Apparence</SectionTitle>
           <ThemePicker />
@@ -56,22 +56,22 @@ async function SettingsContent() {
       </Panel>
 
       <Panel id="synchronisation">
-        <SectionTitle>Synchronisation avec atelier_Trésorerie</SectionTitle>
-        <p className="mb-4 max-w-prose text-sm text-ink-soft">
+        <SectionTitle>Synchronisation avec Atelier Trésorerie</SectionTitle>
+        <p className="mb-4 max-w-prose text-muted">
           Trésorerie tourne sur ton Mac, hors d&apos;Internet. Un petit script, installé sur ce Mac, lit les lignes en attente avec une clé, les crée dans
           Trésorerie (compte et catégorie retrouvés par leur nom), puis les marque « envoyées ». La clé ne donne accès qu&apos;à tes lignes Trésorerie, et
           tu peux la supprimer à tout moment.
         </p>
 
         {tokens.length > 0 && (
-          <ul className="mb-5 divide-y divide-line rounded-2xl border border-edge-soft">
+          <ul className="mb-5 divide-y divide-line rounded-md border border-edge">
             {tokens.map((t) => (
-              <li key={t.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
+              <li key={t.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2 pr-2 pl-3">
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-ink">
-                    {t.label} <span className="font-mono text-xs font-normal text-ink-soft">…{t.hint}</span>
+                  <span className="block font-medium text-ink">
+                    {t.label} <span className="font-mono text-small font-normal text-muted">…{t.hint}</span>
                   </span>
-                  <span className="block text-xs text-ink-soft">
+                  <span className="block text-small text-muted tabular-nums">
                     Créée le {dateTime.format(new Date(t.created_at))} ·{" "}
                     {t.last_used_at ? `dernier passage le ${dateTime.format(new Date(t.last_used_at))}` : "jamais utilisée"}
                   </span>
@@ -93,8 +93,8 @@ async function SettingsContent() {
 
       <Panel>
         <SectionTitle>Mot de passe</SectionTitle>
-        <p className="mb-4 max-w-prose text-sm text-ink-soft">
-          Connecté en tant que <span className="font-semibold text-ink">{email}</span>. Le compte est commun aux apps Atelier qui partagent la même base
+        <p className="mb-4 max-w-prose text-muted">
+          Connecté en tant que <span className="font-medium text-ink">{email}</span>. Le compte est commun aux apps Atelier qui partagent la même base
           (comme Atelier Cuisine) : un nouveau mot de passe vaut aussi pour elles.
         </p>
         <PasswordForm />

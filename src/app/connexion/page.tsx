@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Activity } from "lucide-react";
+import { ListChecks } from "lucide-react";
 import { LoginForm } from "./login-form";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -8,19 +8,19 @@ export const metadata: Metadata = { title: "Connexion" };
 
 export default function LoginPage() {
   return (
-    <main className="grid min-h-dvh place-items-center px-5 py-12">
-      <div className="w-full max-w-sm">
-        <span className="atelier-brand text-ink">
+    <main className="grid min-h-dvh place-items-center px-5 pt-[max(3rem,env(safe-area-inset-top))] pb-12">
+      <div className="w-full max-w-[340px]">
+        <span className="atelier-brand">
           <span className="atelier-brand__tile" aria-hidden>
-            <Activity />
+            <ListChecks />
           </span>
           <span className="atelier-brand__name">
-            <span className="atelier-brand__prefix">atelier_</span>Suivi
+            <span className="atelier-brand__prefix">Atelier </span>Suivi
           </span>
         </span>
-        <h1 className="neon-title mt-6 font-display text-4xl leading-tight font-extrabold text-ink">Tes journées, cochées</h1>
-        <p className="mt-3 mb-8 text-ink-soft">
-          Rappels quotidiens, habitudes, et les dépenses qui partent toutes seules vers atelier_Trésorerie.
+        <h1 className="mt-8 text-page font-semibold tracking-[-0.012em] text-ink">Tes journées, cochées</h1>
+        <p className="mt-1.5 mb-6 text-strong text-muted">
+          Rappels quotidiens, habitudes, et les dépenses qui partent toutes seules vers Atelier Trésorerie.
         </p>
         <Suspense fallback={<Skeleton className="h-64" />}>
           <LoginForm />

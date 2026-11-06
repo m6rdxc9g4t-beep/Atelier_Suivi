@@ -3,18 +3,16 @@ import type { ReactNode } from "react";
 
 /**
  * Formulaire repliable (details/summary natif, sans JS) pour garder les pages
- * centrées sur le contenu plutôt que sur la saisie.
+ * centrées sur le contenu plutôt que sur la saisie. Une ligne de liste quand il est fermé.
  */
 export function Disclosure({ label, children, defaultOpen }: { label: string; children: ReactNode; defaultOpen?: boolean }) {
   return (
-    <details className="neon-panel group mb-8 rounded-[1.75rem] border border-edge bg-surface open:pb-2 open:neon-panel-strong" open={defaultOpen}>
-      <summary className="flex cursor-pointer list-none items-center gap-3 rounded-[1.75rem] px-5 py-4 font-medium text-ink hover:bg-accent-faint [&::-webkit-details-marker]:hidden">
-        <span className="grid size-8 place-items-center rounded-full bg-accent text-accent-ink transition-transform group-open:rotate-45">
-          <Plus className="size-4" aria-hidden />
-        </span>
+    <details className="group border-b border-line" open={defaultOpen}>
+      <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 px-5 font-medium text-ink-2 transition-colors hover:bg-sunken hover:text-ink lg:min-h-10 [&::-webkit-details-marker]:hidden">
+        <Plus className="size-4 text-faint transition-transform group-open:rotate-45" aria-hidden />
         {label}
       </summary>
-      <div className="px-5 pb-4 pt-1">{children}</div>
+      <div className="max-w-2xl px-5 pt-2 pb-6">{children}</div>
     </details>
   );
 }

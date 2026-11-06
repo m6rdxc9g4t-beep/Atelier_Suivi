@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-/** En-tête de page : petite étiquette, titre arrondi avec halo de la couleur de l'app, intro, actions */
+/**
+ * Barre haute de la vue (44 px, collante sur ordinateur) : contexte en gris puis titre de la vue,
+ * actions à droite. L'intro éventuelle passe dessous, en une ligne discrète.
+ */
 export function PageHeader({
   eyebrow,
   title,
@@ -13,15 +16,27 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div className="min-w-0 max-w-xl">
-        {eyebrow && <p className="eyebrow text-accent-strong">{eyebrow}</p>}
-        <h1 className="neon-title mt-1 font-display text-3xl leading-tight font-extrabold text-balance text-ink first-letter:uppercase sm:text-4xl">
-          {title}
+    <>
+      <header className="z-20 flex min-h-13 items-center gap-3 border-b border-line bg-paper px-5 lg:sticky lg:top-0 lg:min-h-11 lg:bg-paper/90 lg:backdrop-blur-md lg:backdrop-saturate-150">
+        {/* Téléphone : titre puis contexte dessous ; ordinateur : fil « contexte / titre » sur une ligne */}
+        <h1 className="flex min-w-0 flex-1 flex-col py-1.5 text-strong font-semibold text-ink lg:flex-row lg:items-baseline lg:gap-2 lg:py-0 lg:text-ui">
+          {eyebrow && (
+            <span className="order-2 flex shrink-0 items-baseline gap-2 text-small font-medium text-muted lg:order-none lg:text-ui">
+              {eyebrow}
+              <span className="hidden text-faint lg:inline" aria-hidden>
+                /
+              </span>
+            </span>
+          )}
+          <span className="order-1 min-w-0 truncate first-letter:uppercase lg:order-none">{title}</span>
         </h1>
-        {intro && <p className="mt-2 text-ink-soft">{intro}</p>}
-      </div>
-      {action}
-    </header>
+        {action}
+      </header>
+      {intro && (
+        <div className="border-b border-line px-5 py-3">
+          <p className="max-w-3xl text-muted">{intro}</p>
+        </div>
+      )}
+    </>
   );
 }

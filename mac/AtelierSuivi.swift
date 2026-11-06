@@ -72,7 +72,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate,
                           styleMask: [.titled, .closable, .miniaturizable, .resizable],
                           backing: .buffered, defer: false)
         window.title = "Atelier Suivi"
-        window.backgroundColor = NSColor(calibratedRed: 0.035, green: 0.047, blue: 0.067, alpha: 1)
+        // Fond de la charte v2 (#fbfbfc en clair, #0f1012 en sombre) : pas de flash au chargement
+        window.backgroundColor = NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+                ? NSColor(srgbRed: 0.059, green: 0.063, blue: 0.071, alpha: 1)
+                : NSColor(srgbRed: 0.984, green: 0.984, blue: 0.988, alpha: 1)
+        }
         window.minSize = NSSize(width: 380, height: 520)
         window.contentView = webView
         window.delegate = self
@@ -207,10 +212,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate,
         let html = """
         <!doctype html><html lang="fr"><meta charset="utf-8">
         <style>
-          html,body{height:100%;margin:0;background:#090c11;color:#d8f6fb;font:16px -apple-system,system-ui,sans-serif}
+          :root{color-scheme:light dark;--bg:#fbfbfc;--ink:#1a1b1e;--muted:#5f636c;--accent:#008295;--hover:#00707f}
+          @media (prefers-color-scheme:dark){:root{--bg:#0f1012;--ink:#e8e9ec;--muted:#969aa3;--hover:#2a96a6}}
+          html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:13px/1.45 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
           body{display:grid;place-items:center;text-align:center}
-          h1{color:#15aabf;font-size:22px;margin:0 0 8px} p{opacity:.75;max-width:420px;margin:0 auto 22px}
-          button{background:#15aabf;color:#04252b;border:0;border-radius:10px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer}
+          h1{font-size:15px;font-weight:600;margin:0 0 4px} p{color:var(--muted);max-width:420px;margin:0 auto 16px}
+          small{font-size:12px}
+          button{background:var(--accent);color:#fff;border:0;border-radius:7px;height:30px;padding:0 12px;font:500 13px -apple-system,system-ui,sans-serif;cursor:pointer}
+          button:hover{background:var(--hover)} button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
         </style>
         <div><h1>Atelier Suivi est injoignable</h1>
         <p>Vérifie ta connexion internet, puis réessaie.<br><small>\(safe)</small></p>

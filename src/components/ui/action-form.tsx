@@ -30,7 +30,7 @@ export function ActionForm({
     >
       {children}
       {state.status === "error" && (
-        <p role="alert" className={cn("mt-2 w-full basis-full text-xs font-medium text-bad")}>
+        <p role="alert" className={cn("mt-2 w-full basis-full text-small font-medium text-bad")}>
           {state.message}
         </p>
       )}

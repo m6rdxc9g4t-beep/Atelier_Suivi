@@ -7,6 +7,7 @@ import { centsToInput } from "@/lib/format";
 import { MONEY_KINDS, TRESORERIE_CATEGORIES } from "@/lib/meta";
 import type { TresoLineRow } from "@/lib/supabase/database.types";
 import { useFormAction } from "@/lib/use-form-action";
+import { segment, segmented } from "@/components/ui/segmented";
 import { updateLine } from "./actions";
 
 /** Correction d'une ligne en attente (montant, libellé, catégorie, compte, date) */
@@ -24,16 +25,13 @@ export function LineForm({ line }: { line: Pick<TresoLineRow, "id" | "day" | "la
         <Input id={`${idp}-label`} name="label" maxLength={200} defaultValue={v?.label ?? line.label} />
       </Field>
       <Field label="Montant (€)" name={`${idp}-amount`} errors={err("amount")}>
-        <Input id={`${idp}-amount`} name="amount" inputMode="decimal" className="font-mono" defaultValue={v?.amount ?? centsToInput(Math.abs(line.amount_cents))} />
+        <Input id={`${idp}-amount`} name="amount" inputMode="decimal" className="tabular-nums" defaultValue={v?.amount ?? centsToInput(Math.abs(line.amount_cents))} />
       </Field>
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium text-ink">Sens</legend>
-        <div className="flex gap-2">
+        <legend className="mb-1.5 font-medium text-ink-2">Sens</legend>
+        <div className={segmented}>
           {MONEY_KINDS.map((k) => (
-            <label
-              key={k.value}
-              className="flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border border-edge-soft bg-surface px-3 text-sm font-semibold text-ink-soft has-checked:border-treso has-checked:text-treso"
-            >
+            <label key={k.value} className={segment}>
               <input type="radio" name="kind" value={k.value} defaultChecked={(v?.kind ?? (line.amount_cents < 0 ? "depense" : "recette")) === k.value} className="sr-only" />
               {k.label}
             </label>

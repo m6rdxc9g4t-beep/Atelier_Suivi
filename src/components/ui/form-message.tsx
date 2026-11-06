@@ -11,8 +11,8 @@ export function FormMessage({ state, className }: { state: ActionState; classNam
     <p
       role={isError ? "alert" : "status"}
       className={cn(
-        "flex items-start gap-2 rounded-2xl px-4 py-3 text-sm",
-        isError ? "bg-bad-soft text-bad" : "bg-good-soft text-good",
+        "flex items-start gap-2 rounded-md border px-3 py-2.5",
+        isError ? "border-bad/30 bg-bad-soft text-bad" : "border-good/30 bg-good-soft text-good",
         className,
       )}
     >
