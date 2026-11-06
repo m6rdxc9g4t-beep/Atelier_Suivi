@@ -1,7 +1,7 @@
 # App Mac « Atelier Suivi »
 
 Fenêtre native (WebKit) qui ouvre Atelier Suivi, avec l'icône carrée de l'app (charte v2 « Linear » : dégradé
-cyan #008295, glyphe Lucide `list-checks` blanc) dans le Dock, le Finder et Launchpad, comme les autres apps de la suite. La session (cookies) est gardée
+lilas #8a5fb8, glyphe Lucide `list-checks` blanc) dans le Dock, le Finder et Launchpad, comme les autres apps de la suite. La session (cookies) est gardée
 par l'app, à part de Safari ; les exports CSV vont dans Téléchargements.
 
 ## Installer ou mettre à jour
