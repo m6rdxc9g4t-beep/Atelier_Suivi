@@ -30,8 +30,9 @@ envoyée à Trésorerie par le script du Mac (ou exportée en CSV). Même pile e
   relevés de Trésorerie (Date ; Libellé ; Montant ; Catégorie).
 
 ## Design
-Charte Atelier v2 « Linear » (règles : `Atelier_Deploy/DESIGN.md`, `Atelier_Projets/docs/SUITE.md` §1) : structure neutre
-commune en gris froids, clair et sombre, plate au repos, traits de 1 px, police Inter. La signature de Suivi, le **cyan #008295**
+Charte Atelier v2 « Linear » (règles : `Atelier_Deploy/DESIGN.md`, `Atelier_Projets/docs/SUITE.md` §1) : plate au repos,
+traits de 1 px, police Inter ; palette du foyer (Dates, Suivi, Cuisine, §3 bis du kit) : **crème** en clair, **bleu nuit** en
+sombre (fonds fixes hors CSS : `#f8f4ec` / `#0b1220`). La signature de Suivi, le **lilas #8a5fb8**
 (`--atelier-sig-suivi`, activée par `data-atelier-app="suivi"` sur `<html>`), ne sert qu'à l'accent : bouton principal, case
 cochée, sélection, focus, liens, barres d'une seule mesure. Pas de halo, de lueur, de grille de fond, de `text-shadow`, de barre de
 couleur sur le côté, ni de surtitre au-dessus des titres.
@@ -52,8 +53,8 @@ Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-sidebar`, `bg-surface`, `bg-su
 `bg-accent-soft`, `text-accent-strong`, `shadow-pop` (seulement ce qui flotte), `focus-ring`. Tailles : `text-meta`, `text-small`,
 `text-ui` (13 px sur ordinateur, 15 px sur téléphone), `text-strong`, `text-title`, `text-page`, `text-input` (16 px sur téléphone :
 pas de zoom iOS). Rayons `rounded-xs|sm|md|lg` = 4 / 5 / 7 / 10 px. Chiffres en `tabular-nums` (pas de police mono hors code).
-Couleurs qui portent un sens, jamais la signature : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu de Trésorerie,
-pour tout ce qui part vers elle). Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une
+Couleurs qui portent un sens, jamais la signature ni du lilas : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu de
+Trésorerie, pour tout ce qui part vers elle) ; texte ≥ 4,5:1 et pastilles ≥ 3:1 sur le crème comme sur le bleu nuit. Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une
 classe de `buttonClasses()`, passer par une variante (`max-sm:`, `max-lg:`) ou le suffixe `!`.
 Sur téléphone, la barre d'onglets est fixe : le `main` garde une marge basse
 (`pb-[calc(7.5rem+env(safe-area-inset-bottom))]`) pour que rien ne passe dessous ; aucun `backdrop-filter` sur un

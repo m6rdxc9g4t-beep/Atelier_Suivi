@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
   // Icône d'écran d'accueil : une seule adresse, servie par le proxy selon l'appareil
   // (plein cadre sur iPhone, qui arrondit lui-même). Changer ?v= force les appareils à la retélécharger.
-  icons: { apple: [{ url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" }] },
+  icons: { apple: [{ url: "/apple-touch-icon.png?v=4", sizes: "180x180", type: "image/png" }] },
 };
 
 export const viewport: Viewport = {
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1012" },
+    { media: "(prefers-color-scheme: light)", color: "#f8f4ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1220" },
   ],
 };
 
