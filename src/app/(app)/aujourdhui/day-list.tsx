@@ -157,7 +157,7 @@ function Row({ item, disabled, onToggle }: { item: DayItemView; disabled: boolea
         <span
           className={cn(
             "grid size-[22px] place-items-center rounded-full border-[1.5px] transition-[background-color,border-color,transform] duration-150 ease-out group-active:scale-90 lg:size-4",
-            item.done ? "border-accent bg-accent text-accent-ink" : "border-edge-soft text-transparent group-hover:border-accent",
+            item.done ? "border-accent bg-accent text-accent-ink" : "border-edge-soft text-transparent group-hover:border-accent-line",
             disabled && "border-dashed opacity-60 group-hover:border-edge-soft",
           )}
         >

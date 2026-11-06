@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <!-- Atelier Suivi : icône d'app (charte v2 « Linear ») — carré arrondi (rayon 22 %) en dégradé de la signature #8a5fb8,
+  <!-- Atelier Suivi : icône d'app (charte v2 « Linear ») — carré arrondi (rayon 22 %) en dégradé de la signature #15aabf,
        glyphe Lucide « list-checks » (ISC) en trait blanc. Favicon, icônes PWA, app Mac. -->
   <defs>
     <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a282c9"/>
-      <stop offset="1" stop-color="#8a5fb8"/>
+      <stop offset="0" stop-color="#63bdcd"/>
+      <stop offset="1" stop-color="#15aabf"/>
     </linearGradient>
   </defs>
   <rect width="1024" height="1024" rx="225" fill="url(#fond)"/>

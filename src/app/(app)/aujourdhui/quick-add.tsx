@@ -40,7 +40,7 @@ export function QuickAdd() {
             placeholder="Ajouter une tâche à faire…"
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "quick-title-error" : undefined}
-            className="h-11 w-full rounded-md border border-edge-soft bg-field px-3 sm:pl-9 text-input text-ink transition-[border-color,box-shadow] hover:border-faint focus:border-accent focus:outline-none focus:focus-ring aria-[invalid=true]:border-bad lg:h-[30px]"
+            className="h-11 w-full rounded-md border border-edge-soft bg-field px-3 sm:pl-9 text-input text-ink transition-[border-color,box-shadow] hover:border-faint focus:border-accent-line focus:outline-none focus:focus-ring aria-[invalid=true]:border-bad lg:h-[30px]"
           />
         </div>
         <SubmitButton aria-label="Ajouter la tâche" className="max-lg:h-11 max-sm:w-11 max-sm:px-0">

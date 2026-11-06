@@ -243,7 +243,7 @@ function Cell({ state, day, small }: { state: CellState; day?: string; small?: b
         small ? "size-4 rounded-xs" : "size-6 rounded-sm",
         state === "done" && "bg-accent text-accent-ink",
         state === "missed" && "border border-edge-soft bg-[repeating-linear-gradient(135deg,transparent_0_4px,var(--line)_4px_5px)]",
-        state === "todo" && "border-[1.5px] border-dashed border-accent",
+        state === "todo" && "border-[1.5px] border-dashed border-accent-line",
         state === "planned" && "border border-edge-soft",
       )}
     >

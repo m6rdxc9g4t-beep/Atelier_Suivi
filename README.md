@@ -5,7 +5,7 @@ tes habitudes sur la semaine, et le lien avec **atelier_Trésorerie** : quand tu
 acheté en pharmacie, un abonnement payé), une ligne de dépense est préparée puis envoyée dans tes comptes.
 
 **Stack :** Next.js 16 (App Router, Cache Components) · React 19 · TypeScript · Tailwind CSS 4 · Supabase (Postgres,
-Auth, RLS) · Zod · Lucide · Vercel. Même base qu'Atelier Dates ; charte v2 « Linear » de la suite, palette du foyer (crème en clair, bleu nuit en sombre), couleur signature : lilas `#8a5fb8`.
+Auth, RLS) · Zod · Lucide · Vercel. Même base qu'Atelier Dates ; charte v2 « Linear » de la suite avec les couleurs d'avant : toute l'app teintée de sa couleur signature, cyan `#15aabf`, en clair comme en sombre.
 
 <p align="center"><img src="docs/brand/icone-suivi.svg" alt="Atelier Suivi" width="96"></p>
 
@@ -129,7 +129,7 @@ Date ; Libellé ; Montant ; Catégorie reconnues automatiquement), puis *J'ai im
 src/
 ├── proxy.ts                        # rafraîchit la session, protège les routes
 ├── app/
-│   ├── layout.tsx  globals.css     # polices, thème, jetons de la charte Atelier (lilas)
+│   ├── layout.tsx  globals.css     # polices, thème, jetons de la charte Atelier (cyan)
 │   ├── connexion/  auth/callback/  # mot de passe ou lien magique
 │   └── (app)/
 │       ├── aujourdhui/             # liste du jour, coche optimiste, fenêtre de montant, ajout rapide
@@ -170,6 +170,5 @@ docs/prototype/atelier_suivi.html   # prototype d'origine
 
 ## 9. Prochaines étapes suggérées
 
-- Ajouter `--atelier-sig-suivi: #15aabf` au kit de marque dans Atelier_Projets, puis recopier le kit partout.
 - Logo atelier_Suivi suivant le gabarit de la charte, et fenêtre « À propos ».
 - Rappels push à l'heure du moment choisi (matin, soir…), comme les notifications d'Atelier Dates.

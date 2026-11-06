@@ -48,7 +48,7 @@ export function AmountDialog({ target, onClose, onDone }: { target: AmountTarget
         if (e.target === dialog.current) dialog.current?.close();
       }}
       aria-labelledby="amount-title"
-      className="m-auto w-[min(30rem,calc(100vw-1.5rem))] max-w-none rounded-lg border border-edge bg-surface p-0 text-ink shadow-pop backdrop:bg-[rgb(11_18_32/0.45)] max-sm:mb-0 max-sm:w-full max-sm:rounded-b-none"
+      className="m-auto w-[min(30rem,calc(100vw-1.5rem))] max-w-none rounded-lg border border-edge bg-surface p-0 text-ink shadow-pop backdrop:bg-[rgb(10_11_13/0.45)] max-sm:mb-0 max-sm:w-full max-sm:rounded-b-none"
     >
       <form action={action} className="flex flex-col gap-4 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]" noValidate>
         <div className="flex items-start gap-3">

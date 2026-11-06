@@ -72,11 +72,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate,
                           styleMask: [.titled, .closable, .miniaturizable, .resizable],
                           backing: .buffered, defer: false)
         window.title = "Atelier Suivi"
-        // Fond de la palette du foyer (crème #f8f4ec en clair, bleu nuit #0b1220 en sombre) : pas de flash au chargement
+        // Fond teinté de la signature cyan (#f2f7fa en clair, #0a0e12 en sombre, §3 bis du kit) : pas de flash au chargement
         window.backgroundColor = NSColor(name: nil) { appearance in
             appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-                ? NSColor(srgbRed: 0.043, green: 0.071, blue: 0.125, alpha: 1)
-                : NSColor(srgbRed: 0.973, green: 0.957, blue: 0.925, alpha: 1)
+                ? NSColor(srgbRed: 0.039, green: 0.055, blue: 0.071, alpha: 1)
+                : NSColor(srgbRed: 0.949, green: 0.969, blue: 0.980, alpha: 1)
         }
         window.minSize = NSSize(width: 380, height: 520)
         window.contentView = webView
@@ -212,14 +212,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate,
         let html = """
         <!doctype html><html lang="fr"><meta charset="utf-8">
         <style>
-          :root{color-scheme:light dark;--bg:#f8f4ec;--ink:#1f1b16;--muted:#665d51;--accent:#8a5fb8;--hover:#744f9b}
-          @media (prefers-color-scheme:dark){:root{--bg:#0b1220;--ink:#e6eaf2;--muted:#9aa6bb;--hover:#9975c3}}
+          :root{color-scheme:light dark;--bg:#f2f7fa;--ink:#1c2b31;--muted:#526774;--accent:#15aabf;--hover:#108fa1;--line:#1193a6}
+          @media (prefers-color-scheme:dark){:root{--bg:#0a0e12;--ink:#ebf2f6;--muted:#8ea8b6;--hover:#4eb6c8;--line:#15aabf}}
           html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:13px/1.45 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
           body{display:grid;place-items:center;text-align:center}
           h1{font-size:15px;font-weight:600;margin:0 0 4px} p{color:var(--muted);max-width:420px;margin:0 auto 16px}
           small{font-size:12px}
-          button{background:var(--accent);color:#fff;border:0;border-radius:7px;height:30px;padding:0 12px;font:500 13px -apple-system,system-ui,sans-serif;cursor:pointer}
-          button:hover{background:var(--hover)} button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+          button{background:var(--accent);color:#0b0b0f;border:0;border-radius:7px;height:30px;padding:0 12px;font:500 13px -apple-system,system-ui,sans-serif;cursor:pointer}
+          button:hover{background:var(--hover)} button:focus-visible{outline:2px solid var(--line);outline-offset:2px}
         </style>
         <div><h1>Atelier Suivi est injoignable</h1>
         <p>Vérifie ta connexion internet, puis réessaie.<br><small>\(safe)</small></p>

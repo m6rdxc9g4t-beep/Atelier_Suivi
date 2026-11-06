@@ -11,8 +11,8 @@ import { usePathname } from "next/navigation";
  * directement dans la page quand l'appareil est un iPhone, avec des adresses jamais vues par
  * l'iPhone (pour qu'aucun cache ne ressorte une ancienne icône).
  */
-const IPHONE_ICON = "/icons/apple-icon-iphone.png?v=4";
-const IPHONE_MANIFEST = "/icons/manifest-iphone.webmanifest?v=4";
+const IPHONE_ICON = "/icons/apple-icon-iphone.png?v=5";
+const IPHONE_MANIFEST = "/icons/manifest-iphone.webmanifest?v=5";
 
 const apply = `(function(){try{
 if(!/iPhone|iPod/.test(navigator.userAgent))return;
