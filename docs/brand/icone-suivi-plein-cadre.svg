@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <!-- Atelier Suivi : icône d'écran d'accueil (iPhone, iPad, Mac), plein cadre et opaque — le système arrondit lui-même.
-       Même dessin que icone-suivi.svg : dégradé de la signature #8a5fb8, glyphe Lucide « list-checks » (ISC) en trait blanc. -->
+       Même dessin que icone-suivi.svg : dégradé de la signature #15aabf, glyphe Lucide « list-checks » (ISC) en trait blanc. -->
   <defs>
     <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a282c9"/>
-      <stop offset="1" stop-color="#8a5fb8"/>
+      <stop offset="0" stop-color="#63bdcd"/>
+      <stop offset="1" stop-color="#15aabf"/>
     </linearGradient>
   </defs>
   <rect width="1024" height="1024" fill="url(#fond)"/>
