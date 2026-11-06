@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
+      // Préférence de thème commune de la suite : posée en ligne dans <head> (src/components/theme/theme-script.tsx)
+      "atelier-theme.js": { type: "text" },
     },
   },
   async redirects() {

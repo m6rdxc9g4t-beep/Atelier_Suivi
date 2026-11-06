@@ -1,56 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { THEME_MODES, THEME_STORAGE_KEY, type ThemeMode } from "./theme-constants";
+import { THEME_MODES, type ThemeMode } from "./theme-constants";
 
-function apply(mode: ThemeMode) {
-  const dark = mode === "dark" || (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.classList.toggle("dark", dark);
+const ICONS = { system: Monitor, light: Sun, dark: Moon } as const;
+
+function subscribe(onChange: () => void) {
+  window.addEventListener("atelier-theme", onChange);
+  document.addEventListener("visibilitychange", onChange);
+  return () => {
+    window.removeEventListener("atelier-theme", onChange);
+    document.removeEventListener("visibilitychange", onChange);
+  };
 }
+const read = (): ThemeMode => window.atelierTheme?.get() ?? "system";
 
-/** Choix du mode clair / sombre (mémorisé sur cet appareil) */
-export function ThemePicker() {
-  const [mode, setMode] = useState<ThemeMode>("system");
+/**
+ * Choix Système / Clair / Sombre : préférence commune à la suite Atelier
+ * (window.atelierTheme, posé par le script de thème ; cookie sur le VPS, sinon cet appareil).
+ * `compact` : icônes seules, pour le pied de la barre latérale.
+ */
+export function ThemePicker({ compact = false }: { compact?: boolean }) {
+  const mode = useSyncExternalStore(subscribe, read, () => "system" as ThemeMode);
 
-  useEffect(() => {
-    try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture unique de la préférence locale
-      setMode((localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? "system");
-    } catch {
-      /* stockage indisponible */
-    }
-  }, []);
-
-  function choose(next: ThemeMode) {
-    setMode(next);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch {
-      /* stockage indisponible : le choix vaut pour cette visite */
-    }
-    apply(next);
-  }
-
-  return (
-    <fieldset>
-      <legend className="mb-2 text-sm font-semibold text-ink">Apparence</legend>
-      <div className="inline-flex flex-wrap rounded-full border border-edge-soft bg-accent-faint p-1">
-        {THEME_MODES.map((m) => (
+  const control = (
+    <div className="inline-flex gap-0.5 rounded-md bg-sunken p-0.5">
+      {THEME_MODES.map((m) => {
+        const Icon = ICONS[m.value];
+        const pressed = mode === m.value;
+        return (
           <button
             key={m.value}
             type="button"
-            aria-pressed={mode === m.value}
-            onClick={() => choose(m.value)}
+            aria-pressed={pressed}
+            aria-label={compact ? m.label : undefined}
+            title={compact ? m.label : undefined}
+            onClick={() => window.atelierTheme?.set(m.value)}
             className={cn(
-              "min-h-10 rounded-full px-4 text-sm transition-colors",
-              mode === m.value ? "bg-selected font-semibold text-ink" : "text-ink-soft hover:text-ink",
+              "inline-flex items-center justify-center gap-1.5 rounded-sm font-medium text-small text-muted transition-colors hover:text-ink",
+              compact ? "size-6" : "h-9 px-3 lg:h-6 lg:px-2",
+              pressed && "bg-surface text-ink shadow-pressed",
             )}
           >
-            {m.label}
+            <Icon className={compact ? "size-3.5" : "size-4 lg:size-3.5"} aria-hidden strokeWidth={1.75} />
+            {!compact && m.label}
           </button>
-        ))}
-      </div>
+        );
+      })}
+    </div>
+  );
+
+  if (compact) return control;
+  return (
+    <fieldset>
+      <legend className="sr-only">Apparence</legend>
+      {control}
     </fieldset>
   );
 }

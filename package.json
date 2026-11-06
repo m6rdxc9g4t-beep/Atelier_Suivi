@@ -17,8 +17,6 @@
     "sync:tresorerie": "node scripts/sync-tresorerie.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
-    "@fontsource-variable/nunito-sans": "^5.2.7",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "clsx": "^2.1.1",
