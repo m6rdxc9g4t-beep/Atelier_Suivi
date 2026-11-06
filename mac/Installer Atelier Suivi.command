@@ -1,5 +1,5 @@
 #!/bin/bash
-# Construit l'app Mac « Atelier Suivi » (fenêtre native WebKit, icône = logo complet) à partir de ce dossier
+# Construit l'app Mac « Atelier Suivi » (fenêtre native WebKit, icône carrée de l'app) à partir de ce dossier
 # et l'installe dans ~/Desktop/Atelier/Apps (là où le panneau Ateliers la cherche), sinon dans /Applications.
 # L'adresse ouverte est celle de adresse.txt ; si l'app est déjà installée, son adresse actuelle est gardée.
 # Même identifiant (fr.atelier-suivi.launcher) : le panneau Ateliers l'ouvre comme avant.
