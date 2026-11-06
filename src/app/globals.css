@@ -5,11 +5,13 @@
 
 /* ---------------------------------------------------------------------------
    Design tokens — charte Atelier v2 « Linear » (Atelier_Deploy/DESIGN.md)
-   Structure neutre commune (gris froids, clair et sombre) branchée sur les jetons --atelier-*
-   du kit ; la signature de Suivi (cyan #008295) ne sert qu'à l'accent : bouton principal,
-   case cochée, sélection, focus, liens, séries d'une seule mesure.
-   Couleurs à part (elles portent un sens) : réussite / erreur, catégories,
+   Structure branchée sur les jetons --atelier-* du kit : palette du foyer (Dates, Suivi, Cuisine),
+   crème en clair et bleu nuit en sombre ; la signature de Suivi (lilas #8a5fb8) ne sert qu'à
+   l'accent : bouton principal, case cochée, sélection, focus, liens, séries d'une seule mesure.
+   Couleurs à part (elles portent un sens, jamais lilas) : réussite / erreur, catégories,
    et le bleu de Trésorerie pour tout ce qui part vers elle.
+   En clair, réussite / erreur / Trésorerie sont foncées d'un cran : ≥ 4,5:1 en texte sur le crème
+   et sur leur voile ; catégories (pastilles) ≥ 3:1 sur toutes les surfaces.
    --------------------------------------------------------------------------- */
 :root {
   --paper: var(--atelier-bg);
@@ -19,7 +21,8 @@
   --selected: var(--atelier-surface-3);
   --field: var(--atelier-field);
   --ink: var(--atelier-text);
-  --ink-2: #393c42;
+  /* Libellés : entre le texte et le gris secondaire, pour suivre la palette (crème ou bleu nuit) */
+  --ink-2: color-mix(in oklab, var(--atelier-text) 72%, var(--atelier-muted));
   --muted: var(--atelier-muted);
   --faint: var(--atelier-faint);
   --edge: var(--atelier-border);
@@ -33,21 +36,25 @@
   --accent-strong: var(--atelier-ink);
   --accent-hover: var(--atelier-signature-hover);
 
-  --good: var(--atelier-up);
+  --good: color-mix(in oklab, var(--atelier-up) 86%, #000000);
   --good-soft: color-mix(in oklab, var(--atelier-up) 10%, transparent);
-  --bad: var(--atelier-down);
+  --bad: color-mix(in oklab, var(--atelier-down) 94%, #000000);
   --bad-soft: color-mix(in oklab, var(--atelier-down) 9%, transparent);
   --warn: var(--atelier-warn);
   /* Trésorerie : sa couleur signature (bleu roi), en texte comme en voile */
-  --treso: var(--atelier-sig-tresorerie);
+  --treso: color-mix(in oklab, var(--atelier-sig-tresorerie) 86%, #000000);
   --treso-soft: color-mix(in oklab, var(--atelier-sig-tresorerie) 12%, transparent);
 
   --cat-sante: #e03131;
-  --cat-sport: #e8590c;
-  --cat-maison: #e0a800;
+  --cat-sport: #d9480f;
+  --cat-maison: #a87400;
   --cat-achats: #3b5bdb;
-  --cat-bien-etre: #9b5de5;
-  --cat-autre: #868e96;
+  /* Bien-être : sarcelle (le violet d'avant se confondait avec la signature lilas) */
+  --cat-bien-etre: #0b8484;
+  --cat-autre: #80786c;
+
+  /* Flèche des menus déroulants (gris secondaire de la palette) */
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f6659' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   /* Échelle typographique : 13 px de base sur ordinateur, 15 px sur téléphone (voir plus bas) */
   --fs-meta: 12.5px;
@@ -75,7 +82,8 @@
 }
 
 :root.dark {
-  --ink-2: #c8cad0;
+  --good: var(--atelier-up);
+  --bad: var(--atelier-down);
   --good-soft: color-mix(in oklab, var(--atelier-up) 14%, transparent);
   --bad-soft: color-mix(in oklab, var(--atelier-down) 13%, transparent);
   --treso: color-mix(in oklab, var(--atelier-sig-tresorerie) 62%, #ffffff);
@@ -85,8 +93,10 @@
   --cat-sport: #ffa94d;
   --cat-maison: #ffd43b;
   --cat-achats: #91a7ff;
-  --cat-bien-etre: #c29ff5;
+  --cat-bien-etre: #5fcfc8;
   --cat-autre: #adb5bd;
+
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b97ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   color-scheme: dark;
 }
@@ -192,9 +202,9 @@
   box-shadow: var(--atelier-focus);
 }
 
-/* Flèche des menus déroulants (gris neutre lisible dans les deux thèmes) */
+/* Flèche des menus déroulants (couleur par thème : --chevron) */
 @utility select-chevron {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23868a94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: var(--chevron);
   background-position: right 10px center;
   background-repeat: no-repeat;
   background-size: 14px;
