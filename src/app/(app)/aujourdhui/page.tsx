@@ -118,39 +118,42 @@ async function TodayContent({ requested }: { requested?: string }) {
         }
       />
 
-      <section aria-label="Avancement du jour" className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line px-5 py-3">
-        <div className="flex min-w-0 flex-[1_1_18rem] items-start gap-3">
-          <svg viewBox="0 0 18 18" className="mt-px size-[18px] shrink-0 -rotate-90" role="img" aria-label={`${doneCount} tâches faites sur ${total}`}>
-            <circle cx="9" cy="9" r="7" fill="none" strokeWidth="2.25" className="stroke-edge-soft" />
-            <circle
-              cx="9"
-              cy="9"
-              r="7"
-              fill="none"
-              strokeWidth="2.25"
-              strokeLinecap="round"
-              className="stroke-accent-line transition-[stroke-dashoffset] duration-500 ease-out"
-              strokeDasharray={circumference.toFixed(2)}
-              strokeDashoffset={(circumference * (1 - progress)).toFixed(2)}
-            />
-          </svg>
-          <p className="min-w-0">
-            <span className="font-semibold text-ink tabular-nums">
-              {doneCount} sur {plural(total, "tâche")}
-            </span>
-            <span className="ml-2 text-faint tabular-nums">{Math.round(progress * 100)} %</span>
-            <span className="mt-0.5 block text-muted lg:mt-0 lg:ml-3 lg:inline">{rest}</span>
-          </p>
+      <section aria-label="Avancement du jour" className="border-b border-line px-4 py-3 sm:px-5">
+        {/* Synthèse du jour : carte de chiffre (coins de 12 px) */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-edge bg-surface px-4 py-3">
+          <div className="flex min-w-0 flex-[1_1_18rem] items-start gap-3">
+            <svg viewBox="0 0 18 18" className="mt-px size-[18px] shrink-0 -rotate-90" role="img" aria-label={`${doneCount} tâches faites sur ${total}`}>
+              <circle cx="9" cy="9" r="7" fill="none" strokeWidth="2.25" className="stroke-edge-soft" />
+              <circle
+                cx="9"
+                cy="9"
+                r="7"
+                fill="none"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+                className="stroke-accent-line transition-[stroke-dashoffset] duration-500 ease-out"
+                strokeDasharray={circumference.toFixed(2)}
+                strokeDashoffset={(circumference * (1 - progress)).toFixed(2)}
+              />
+            </svg>
+            <p className="min-w-0">
+              <span className="font-semibold text-ink tabular-nums">
+                {doneCount} sur {plural(total, "tâche")}
+              </span>
+              <span className="ml-2 text-faint tabular-nums">{Math.round(progress * 100)} %</span>
+              <span className="mt-0.5 block text-muted lg:mt-0 lg:ml-3 lg:inline">{rest}</span>
+            </p>
+          </div>
+          {pending > 0 && (
+            <Link
+              href="/tresorerie"
+              className="inline-flex h-9 items-center gap-1.5 rounded-md border border-treso/35 px-2.5 font-medium text-treso tabular-nums transition-colors hover:bg-treso-soft lg:h-[26px] lg:px-2 lg:text-small"
+            >
+              <Wallet className="size-4 lg:size-3.5" aria-hidden />
+              {plural(pending, "ligne")} pour Trésorerie
+            </Link>
+          )}
         </div>
-        {pending > 0 && (
-          <Link
-            href="/tresorerie"
-            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-treso/35 px-2.5 font-medium text-treso tabular-nums transition-colors hover:bg-treso-soft lg:h-[26px] lg:px-2 lg:text-small"
-          >
-            <Wallet className="size-4 lg:size-3.5" aria-hidden />
-            {plural(pending, "ligne")} pour Trésorerie
-          </Link>
-        )}
       </section>
 
       {isToday && <QuickAdd />}

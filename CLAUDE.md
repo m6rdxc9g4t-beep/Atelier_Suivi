@@ -53,7 +53,9 @@ Jetons Tailwind (`globals.css`) : `bg-paper`, `bg-sidebar`, `bg-surface`, `bg-su
 `text-ink-2`, `text-muted`, `text-faint`, `border-edge`, `border-edge-soft`, `border-line`, `bg-accent` / `text-accent-ink`,
 `bg-accent-soft`, `text-accent-strong`, `border-accent-line` / `outline-accent-line` / `stroke-accent-line`, `shadow-pop` (seulement ce qui flotte), `focus-ring`. Tailles : `text-meta`, `text-small`,
 `text-ui` (13 px sur ordinateur, 15 px sur téléphone), `text-strong`, `text-title`, `text-page`, `text-input` (16 px sur téléphone :
-pas de zoom iOS). Rayons `rounded-xs|sm|md|lg` = 4 / 5 / 7 / 10 px. Chiffres en `tabular-nums` (pas de police mono hors code).
+pas de zoom iOS). Rayons `rounded-xs|sm|md|lg` = 4 / 5 / 7 / 10 px ; `rounded-xl` = 12 px (`--atelier-radius-xl`) pour les cartes de chiffres
+(synthèse du jour, chiffres de la semaine, total pour Trésorerie) : `rounded-xl border border-edge bg-surface`, plates, posées
+dans une bande `px-4 sm:px-5 py-3` au-dessus des listes (`.atelier-kpi` du kit pour une nouvelle carte simple). Chiffres en `tabular-nums` (pas de police mono hors code).
 Couleurs qui portent un sens, jamais cyan ni sarcelle : `good` / `bad` / `warn`, `cat-*` (catégories) et `treso` (bleu roi de
 Trésorerie, pour tout ce qui part vers elle, distinct de toute catégorie : Achats est verte) ; texte ≥ 4,5:1 et pastilles ≥ 3:1 sur
 les fonds teintés, clairs comme sombres. Pas de couleurs ni d'ombres en dur. `cn()` ne fusionne pas les classes : pour surcharger une

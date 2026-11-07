@@ -100,7 +100,7 @@ async function WeekContent({ requested }: { requested?: string }) {
         }
       />
 
-      <dl className="grid grid-cols-1 divide-y divide-line border-b border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <dl className="grid grid-cols-1 gap-2 border-b border-line px-4 py-3 sm:grid-cols-3 sm:gap-3 sm:px-5 sm:py-4">
         <Stat label="Réalisation" value={rate === null ? "–" : `${rate} %`} detail={`${plural(doneSum, "faite")} sur ${plural(dueSum, "prévue")}`} />
         <Stat label="Meilleure série en cours" value={best ? String(best.streak) : "–"} detail={best ? best.title : "Coche une tâche récurrente deux fois de suite"} />
         <Stat label="Vers Trésorerie" value={amountSum ? formatSignedCents(amountSum) : "–"} detail="Lignes préparées sur ces 7 jours" treso={amountSum !== 0} />
@@ -213,9 +213,10 @@ async function WeekContent({ requested }: { requested?: string }) {
 }
 
 function Stat({ label, value, detail, treso }: { label: string; value: string; detail: string; treso?: boolean }) {
-  // Téléphone : une ligne (libellé et détail à gauche, valeur à droite). Ordinateur : colonne.
+  // Carte de chiffre (coins de 12 px). Téléphone : une ligne (libellé et détail à gauche, valeur à droite).
+  // Ordinateur : colonne.
   return (
-    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 px-5 py-2.5 sm:flex sm:flex-col sm:items-stretch sm:py-4">
+    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-xl border border-edge bg-surface px-4 py-2.5 sm:flex sm:flex-col sm:items-stretch sm:py-3.5">
       <dt className="text-small font-medium text-muted">{label}</dt>
       <dd className={cn("col-start-2 row-span-2 row-start-1 text-title font-semibold tabular-nums sm:mt-1 sm:text-page sm:tracking-[-0.012em]", treso ? "text-treso" : "text-ink")}>
         {value}
