@@ -58,8 +58,9 @@ async function TresoContent() {
 
   return (
     <>
-      <section aria-label="Lignes en attente" className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-        <p className="flex items-baseline gap-3">
+      <section aria-label="Lignes en attente" className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 sm:px-5">
+        {/* Total en attente : carte de chiffre (coins de 12 px) */}
+        <p className="flex items-baseline gap-3 rounded-xl border border-edge bg-surface px-4 py-2.5">
           <span className="text-page font-semibold tracking-[-0.012em] text-treso tabular-nums">{pending.length ? formatSignedCents(total) : "0,00 €"}</span>
           <span className="text-muted tabular-nums">{plural(pending.length, "ligne")} en attente</span>
         </p>

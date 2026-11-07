@@ -155,6 +155,7 @@
   --radius-sm: var(--atelier-radius-sm);
   --radius-md: var(--atelier-radius-md);
   --radius-lg: var(--atelier-radius-lg);
+  --radius-xl: var(--atelier-radius-xl); /* cartes de chiffres (synthèses, totaux) */
 
   /* Plat au repos : seul ce qui flotte (dialogue, message) a une ombre */
   --shadow-pop: var(--atelier-glow-strong);
